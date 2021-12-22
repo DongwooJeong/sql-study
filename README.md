@@ -1,6 +1,6 @@
 Sql Study
 ==========
-This study is referred to the book, [SQL for Studying Alone].(http://www.yes24.com/Product/Goods/104661489)
+This study is referred to the book, [SQL for Studying Alone](http://www.yes24.com/Product/Goods/104661489).
 ***
 # Table of Contents
 1. [Database and SQL](#database-and-sql)
@@ -14,7 +14,7 @@ This study is referred to the book, [SQL for Studying Alone].(http://www.yes24.c
 ***
 Database and SQL
 ---
-### 1. Learning Database
+### 1-1. Learning Database
 * Database: a set of data
 * **Database Management System (DBMS)**: a software that manages and operates the database
     - A database should be shared and allow access to several users or application programs simultaneously, so Microsoft Excel is not a DBMS for this reason.
