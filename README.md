@@ -151,6 +151,69 @@ Preview of SQL for Real Use
             SELECT * FROM member WHERE member_name = 'IU';
             ```
         * When there are two different SQLs, DBMS performs both of them. Therefore, you can drag and select the SQL you want to execute so that DBMS can only execute the specified SQL.
+### 2-3. Database Object
+* There are several **database objects** that are mutually related to the table, a key object in the database, such as *index, view, or stored procedure*.
+    <br><br>
+    1. **Index**
+        - Indexes help to find data easily when inquiring from a table, especially when there is a lot of data, which is an efficient function that greatly reduces time.
+        <br><br>
+        - Full Table Scan
+            ```SQL
+            select * from member where member_name ='IU';
+            ```
+        - Create an Index
+            ```SQL
+            create index idx_member_name ON member(member_name);
+            ```
+        - This creates an index named 'idx_member_name' in the 'member_name' column of the 'member' table.
+        - When we use the same SQL above, which is to look up the member whose name is 'IU,' now the database use *Non-Unique Key Lookup*, which is an **Index Scan**.
+        <br><br>
+    2. **View**
+        - View can be defined as a *virtual table*, which is linked to the actual table.
+        <br><br>
+        - Create a view for 'member' table
+            ```SQL
+            create view member_view
+            As
+		        select * from member;
+            ```
+            - SQL does not need an indent to execute the code, but indents are often used for legibility.
+        - Accessing 'member_view' 
+            ```SQL
+            Select * from member_view;
+            ```
+            - This view will show the same result as the table, as a shortcut.
+            <br><br>
+        - There are two reasons to use View.
+            1) Security
+            2) Can make a long SQL statement simple
+    <br><br>
+    3. **Stored Procedure**
+        - Stored Procedure is a *programming function* provided by MySQL that can be conveniently used by grouping multiple SQL statements together.
+        - With this, computational expressions, conditional statements, and repetitive statements used in other programming languages may be used in MySQL as well.
+        <br><br>
+        - Create a stored procedure
+            ```SQL
+            Delimiter //
+            Create procedure myProc()
+            Begin
+	                Select * from member where member_name='hoona';
+	                Select * from product where product_name='samk';
+            End //
+            Delimiter ;
+            ```
+            - This SQL combines two different SQL between Begin and End into one stored procedure.
+        - Call the newly created stored procedure
+            ```SQL
+            Call myProc();
+            ```
+            - The result will show the same as executing the two different SQL to look up the data.
+        
+        - Delete the procedure
+            ```SQL
+            Drop procedure myProc ;
+            ```
+
 
 ***
 SQL Basic Grammar
