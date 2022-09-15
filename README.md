@@ -218,6 +218,332 @@ Preview of SQL for Real Use
 ***
 SQL Basic Grammar
 ---
+### 3-1. Select ~ From ~ Where
+* Select: Retrieve data from the table
+    - Basic format: SELECT (Row name) FROM (Table name) WHERE (Condition)
+<br><br>
+* Creating a database called market_db
+    ```SQL
+    DROP DATABASE IF EXISTS market_db;
+    CREATE DATABASE market_db;
+    ```
+    - DROP DATABASE: Deleting the database named market_db
+    - CREATE DATABASE: Creating a new database
+<br><br>
+* Creating a Member table
+    ```SQL
+    USE market_db;
+    CREATE TABLE member
+    (   mem_id  	CHAR(8) NOT NULL PRIMARY KEY,
+        mem_name    VARCHAR(10) NOT NULL, 
+        mem_number  INT NOT NULL,  
+        addr	  	CHAR(2) NOT NULL, 
+        phone1		CHAR(3), 
+        phone2		CHAR(8), 
+        height    	SMALLINT,  
+        debut_date	DATE  
+    );        
+    ```    
+    - USE: Selecting a database to use
+        * All subsequent queries are executed in this db
+    - CREATE TABLE: Creating a new table
+        <br> &ensp; *Two hyphens(--) in SQL represents comment*
+<br><br>
+* Creating a Buy table
+    ```SQL
+    CREATE TABLE buy
+    (   num 		INT AUTO_INCREMENT NOT NULL PRIMARY KEY,
+        mem_id  	CHAR(8) NOT NULL,
+        prod_name 	CHAR(6) NOT NULL,
+        group_name 	CHAR(4), 
+        price     	INT  NOT NULL,
+        amount    	SMALLINT  NOT NULL,
+        FOREIGN KEY (mem_id) REFERENCES member(mem_id)
+    );
+    ```
+    - AUTO_INCREMENT: Automatically entering numbers
+<br><br>
+* Inserting data into a table
+    ```SQL
+    INSERT INTO member VALUES('TWC', '트와이스', 9, '서울', '02', '11111111', 167, '2015.10.19');
+    INSERT INTO buy VALUES(NULL, 'BLK', '지갑', NULL, 30, 2);
+    ```
+    - CHAR, VARCHAR, and DATe types need quotation marks, while INT type doesn't
+    - Since Num are automatically entered, we input NULL
+<br><br>
+* Retrieving data
+    ```SQL
+    SELECT * FROM member;
+    SELECT * FROM buy;
+    ```
+* Structure of SELECT statement
+    ```SQL
+    SELECT select_expr
+    [FROM table_references]
+    [WHERE where_condition]
+    [GROUP BY {col_name | expr | position}]
+    [HAVING where_condition]
+    [ORDER BY {col_name | expr | position}]
+    [LIMIT {[offset,] row_count | row_count OFFSET offset}]
+    ```
+* SELECT and FROM
+     ```SQL
+    USE market_db;
+    SELECT * FROM member; --SELECT * FROM market_db.member;
+    ```
+    * \* means everything
+    * You can specify the db name in front of the table name using a dot(.)
+<br><br>
+* Selecting specific columns from the table
+    ```SQL
+    SELECT addr, debut_date, mem_name FROM member;
+    SELECT addr address, debut_date "debut date", mem_name FROM member; -- using alias to change how the column name is printed in the result
+    -- column_name alias, column_name2 "alias with spaces"
+    ```
+* SELECT FROM WHERE
+    - Using WHERE to query specific records that matches the condition 
+    ```SQL
+    SELECT * FROM member WHERE mem_name = '블랙핑크';
+    SELECT * FROM member WHERE mem_number = 4;
+    ```
+* Using comparison operator and logical operating in WHERE
+    ```SQL
+    SELECT mem_id, mem_name FROM member WHERE height <= 162;
+    SELECT mem_name, height, mem_number FROM member WHERE height >= 165 AND mem_number >6;
+    SELECT mem_name, height, mem_number FROM member WHERE height >= 165 OR mem_number >6;
+    ```
+* BETWEEN ~ AND
+    ```SQL
+    SELECT mem_name, height FROM member WHERE height >= 163 AND height <= 165;
+    SELECT mem_name, height FROM member WHERE height BETWEEN 163 AND 165;
+    ```
+* IN()
+    ```SQL
+    SELECT mem_name, addr FROM member WHERE addr = '경기' OR addr = '전남' OR addr = '경남';
+    SELECT mem_name, addr FROM member WHERE addr IN('경기', '전남', '경남');
+    ```
+* LIKE
+    ```SQL
+    SELECT * FROM member WHERE mem_name LIKE '우%';
+    SELECT * FROM member WHERE mem_name LIKE '__핑크';
+    ```
+    - Selecting a part of a string using LIKE and %(whatever comes before or after) or _(matching just one letter)
+<br><br>
+* Subquery: Having SELECT inside SELECT
+    ```SQL
+    SELECT mem_name, height FROM member
+        WHERE height > (SELECT height FROM member WHERE mem_name = '에이핑크);
+
+### 3-2. More about SELECT
+* ORDER BY: Controls the sequence of the outcome
+    ```SQL
+    SELECT mem_id, mem_name, debut_date FROM member ORDER BY debut_date;
+    SELECT mem_id, mem_name, debut_date FROM member ORDER BY debut_date ASC;
+    SELECT mem_id, mem_name, debut_date FROM member ORDER BY debut_date DESC;
+    ```
+    - ASC: Ascending order
+    - DESC: Descending order
+    <br><br>
+    ```SQL
+    SELECT mem_id, mem_name, debut_date height FROM member ORDER BY height DESC WHERE height>= 164; -- error
+    SELECT mem_id, mem_name, debut_date height FROM member WHERE height>= 164 ORDER BY height DESC;
+    ```
+    - ORDER BY can be used with WHERE, but it should be used after WHERE
+    <br><br>
+    ```SQL
+    SELECT mem_id, mem_name, debut_date, height FROM member WHERE height >= 164 ORDER BY height DESC, debut_date ASC;
+    ```
+    - Having multiple orders
+<br><br>
+* Limit: limits the number of output printed
+    ```SQL
+    SELECT * FROM member LIMIT 3;
+    SELECT * FROM member LIMIT 0,3;
+    SELECT * FROM member LIMIT 3 OFFSET 0;
+    ```
+    - Retrieving first 3 records from the output
+    - Limit starting_number, number_of_records
+        * LIMIT 0,3 is same as LIMIT 3
+        * LIMIT number_of_records OFFSET starting_number
+    <br><br>
+    ```SQL
+    SELECT mem_name, debut_date FROM member ORDER BY debut_date LIMIT 3;
+    SELECT mem_name, height FROM member ORDER BY height DESC LIMIT 3,2;
+    ```
+    - Usually used with ORDER BY
+<br><br>
+* DISTINCT: removes duplicate
+    ```SQL
+    SELECT addr FROM member;
+    SELECT addr FROM member ORDER BY addr;
+    SELECT DISTINCT addr FROM member;
+    ```
+* GROUP BY: grouping records
+    ```SQL
+    SELECT mem_id, amount FROM buy ORDER BY mem_id;
+    SELECT mem_id, SUM(amount) FROM buy GROUP BY mem_id;
+    ```
+    - SUM(), AVG(), MIN(), MAX(), COUNT(), COUNT(DISTINCT)
+    <br><br>
+    ```SQL
+    SELECT mem_id "member id", SUM(amount) "total purchase" FROM buy GROUP BY mem_id;
+    ```
+    * Using alias to organize output table
+    <br><br>
+    ```SQL
+    SELECT mem_id "member id", SUM(price*amount) "total purchase" FROM buy GROUP BY mem_id;
+    SELECT AVG(amount) "average purchase" FROM buy;
+    SELECT mem_id, AVG(amount) "average purchase" FROM buy GROUP BY mem_id;
+    ```
+    - Can do the calculation within the parenthesis
+    - Can be used with GROUP BY
+    <br><br>
+    ```SQL
+    SELECT COUNT(*) FROM member;
+    SELECT COUNT(phone1) "members with contact" FROM member;
+    ```
+    - Counting the number of members  
+    - Count(row_name) counts the number of records not null
+    <br><br>
+    ```SQL
+    SELECT mem_id "member id", SUM(price*amount) "total purchase"
+    FROM buy GROUP BY mem_id;
+    SELECT mem_id "member id", SUM(price*amount) "total amount" FROM buy WHERE SUM(price*amount) > 1000;
+    GROUP BY mem_id; -- error
+    SELECT mem_id "member id", SUM(price*amount) "total amount" FROM buy GROUP BY mem_id HAVING SUM(price*amount) > 1000;
+    ```
+    - HAVING is used with GROUP BY, similarly functions as where
+    <br><br>
+    ```SQL
+    SELECT mem_id "member id", SUM(price*amount) "total purchase" FROM buy GROUP BY mem_id HAVING SUM(price*amount) > 1000 ORDER BY SUM(price*amount) DESC;
+    ```
+### 3-3. SQL for data manipulation
+* INSERT: enter row data into the table
+    - INSERT INTO table[(row1, row2, ...)] VALUES (value1, value2, ...)
+    ```SQL
+    USE market_db;
+    CREATE TABLE hongong1 (toy_id INT, toy_name CHAR(4), age INT);
+    INSERT INTO hongong1 VALUES (1, 'woody', 25);
+    INSERT INTO hongong1 (toy_id, toy_name) VALUES (2, 'Buzz');
+    ``` 
+    - Specifies column names if you don't want to enter data for all columns
+        + Null value for Unspecified columns
+    ```SQL
+    INSERT INTO hongong1 (toy_name, age, toy_id) VALUES ('Jessie', 20, 3);
+    ```
+    - Can change the order of the column
+    <br><br>
+    AUTO_INCREMENT: enters the value increasing from 1, should be a primary key
+    ```SQL
+    CREATE TABLE hongong2 ( toy_id INT AUTO INCREMENT PRIMARY KEY, toy_name CHAR(4) age INT);
+    INSERT INTO hongong2 VALUES(NULL, 'Bo peep', 25);
+    INSERT INTO hongong2 VALUES(NULL, 'Slinky', 22);
+    INSERT INTO hongong2 VALUES(NULL, 'Rex', 21);
+    SELECT * FROM hongong2;
+    ```
+    - Enter NULL for AUTO_INCREMENT
+    <br><br>
+    ```SQL
+    SELECT LAST_INSERT_ID();
+    ```
+    - The result is 3, which means that with AUTO_INCREMENT, entered up to 3
+    <br><br>
+    ```SQL
+    ALTER TABLE hongong2 AUTO_INCREMENT=100;
+    INSERT INTO honghong2 VALUES (NULL, 'jenam' 35);
+    SELECT * FROM hongong2;
+    ```
+    - Change the beginning AUTO_INCREMENT value to 100
+    <br><br>
+    ```SQL
+    CREATE TABLE hongong3 (
+        toy_id INT AUTO_INCREMENT PRIMARY KEY,
+        toy_name CHAR(4),
+        age INT);
+    ALTER TABLE hongong3 AUTO_INCREMENT=1000;
+    SET @@auto_increment_increment=3;
+    ```
+    - AUTO_INCREMENT value increases from 1000 by 3
+    <br><br>
+    ```SQL
+    INSERT INTO hongong3 VALUES (NULL, 'thomas', 20);
+    INSERT INTO hongong3 VALUES (NULL, 'james', 23);
+    INSERT INTO hongong3 VALUES (NULL, 'gordon', 25);
+    SELECT * FROM hongong3;
+    ```
+    - toy_id goes like "1000, 1003, 1006, ..."
+    <br><br>
+    ```SQL
+    INSERT INTO hongong3 VALUES (NULL, 'thomas', 20), (NULL, 'james', 23), (NULL, 'gordon', 25)
+    ```
+    - Same as the previous code
+    <br><br>
+    - INSERT INTO ~ SELECT: retrieve data from other table to insert data
+    - INSERT INTO table_name (row_name1, row_name2, ...) SELECT ;
+    - Number of columns in SELECT should match that in the table to be inserted
+    - Using world.city table, sue INSERT INTO ~ SELECT
+    ```SQL
+    SELECT COUNT(*) FROM world.city;
+    DESC world.city;
+    SELECT * FROM world.city LIMIT 5; 
+    ```
+    - Checking some info about world.city table
+    ```SQL
+    CREATE TABLE city_popul (city_name CHAR(35), population INT);
+    INSERT INTO city popul SELECT Name, Population FROM world.city;
+    ```
+* UPDATE: Modifying data in the table
+    - UPDATE table_name SET row1=value1, row2=value2, ... WHERE condition ;
+    ```SQL
+    USE market_db;
+    UPDATE city_popul SET city_name = '서울'
+    WHERE city_name = 'Seoul';
+    Select * FROM city_pupul WHERE city_name = '서울';
+    ```
+    - Updating 'Seoul' into '서울'
+    <br><br>
+    ```SQL
+    UPDATE city_popul SET city_name = '뉴욕', population = 0 WHERE city_name = 'New York';
+    SELECT * FROM city popul WHERE city_name = '뉴욕'
+    ```
+    - Updating several column values at once
+    <br><br>
+    ```SQL
+    UPDATE city_popul SET city_name = '서울';
+    ```
+    - Not recommended, changes every row value when skipping WHERE
+    <br><br>
+    ```SQL
+    UPDATE city_popul
+    SET population = population / 1000;
+    SELECT * FROM city_popul LIMIT 5;
+    ```
+    - Dividing all values in population column by 1000
+<br><br>
+* DELETE: deletes the data
+    - DELETE FROM table_name WHERE condition ;
+    ```SQL
+    DELETE FROM city_popul WHERE city_name Like 'New%';
+    ```
+    - Deleting records that contains the city name beginning 'New...'
+    <br><br>
+    ```SQL
+    DELETE FROM city_popul
+    WHERE city_name LIKE 'New%'
+    Limit 5;
+    ```
+    - Deleting top 5 records matching the condition
+    <br><br>
+    - Deleting a large table
+    ```SQL
+    DELETE FROM big_table1;
+    Drop TABLE big_table2;
+    TRUNCATE TABLE big_table3;
+    ```
+    - DELETE deletes every record, so it takes long time, leaving an empty table
+    - DROP deletes the table itself
+    - TRUNCATE is similart to DELETE, but faster, leaving an empty table, but cannot use WHERE like DELETE
+
 ***
 SQL Advanced Grammar
 ---
