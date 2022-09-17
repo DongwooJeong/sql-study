@@ -490,7 +490,7 @@ SQL Basic Grammar
     - Checking some info about world.city table
     ```SQL
     CREATE TABLE city_popul (city_name CHAR(35), population INT);
-    INSERT INTO city popul SELECT Name, Population FROM world.city;
+    INSERT INTO city_popul SELECT Name, Population FROM world.city;
     ```
 * UPDATE: Modifying data in the table
     - UPDATE table_name SET row1=value1, row2=value2, ... WHERE condition ;
@@ -542,11 +542,213 @@ SQL Basic Grammar
     ```
     - DELETE deletes every record, so it takes long time, leaving an empty table
     - DROP deletes the table itself
-    - TRUNCATE is similart to DELETE, but faster, leaving an empty table, but cannot use WHERE like DELETE
+    - TRUNCATE is similar to DELETE, but faster, leaving an empty table, but cannot use WHERE like DELETE
 
 ***
 SQL Advanced Grammar
 ---
+### 4-1. Data type in MySQL
+* Why use a data type?
+    - To efficiently store data in the db <br><br>
+* Data Types
+    - Exact Numeric Data Type 
+        |data type|byte|range   |
+        |---------|----|--------|
+        |TINYINT|1|-128~127|
+        |SMALLINT|2|-32,768~32,767|
+        |INT|4|-2.1B~2.1B|
+        |BIGINT|8| -9Q~9Q|
+    
+        * Exact Numeric Data Type Example
+            ```SQL
+            USE market_db;
+            CREATE TABLE hongong4 (
+                tinyint_col TINYINT,
+                smallint_col SMALLINT,
+                int_col INT
+                bigint_col BIGINT );
+            ```
+            ```SQL
+            INSERT INTO hongong4 VALUES(127, 32767, 2147483647, 9000000000000000000);
+            ```
+            ```SQL
+            INSERT INTO hongong4 VALUES(128, 32768, 2147483648, 90000000000000000000); -- Out of range error
+            ```
+            ```SQL
+            CREATE TABLE member
+            ( mem_id CHAR(8) NOT NULL PRIMARY KEY,
+              mem_name VARCHAR(10) NOT NULL,
+              mem_number INT NOT NULL,
+              addr CHAR(2) NOT NULL,
+              phone1 CHAR(3),
+              phone2 CHAR(8),
+              height SMALLINT,
+              debut_date DATE
+            );
+            ```
+            - Inefficient use of exact numeric data types
+            - Can use UNSIGNED to only store positive numbers
+                + TINYINT UNSIGNED is 0 ~ 255
+                <br><br>
+            - Correction
+            ```SQL
+            CREATE TABLE member
+            ( mem_id CHAR(8) NOT NULL PRIMARY KEY,
+              mem_name VARCHAR(10) NOT NULL,
+              mem_number TINYINT NOT NULL, -- member number cannot be over 127
+              addr CHAR(2) NOT NULL,
+              phone1 CHAR(3),
+              phone2 CHAR(8),
+              height TINYINT UNSIGNED, -- height cannot be over 256
+              debut_date DATE
+            );
+            ```
+    - String Data Type
+
+        |data type| byte|
+        |---------|-----|
+        |CHAR(num)|1~255|
+        |VARCHAR(num)|1~16383|
+        + CHAR: fixed length
+        + VARCHAR: variable length
+            * VARCHAR can use space efficiently, but CHAR has a faster speed in terms of performance in MySQL <br><br>
+        + CHAR and Numeric String
+            ```SQL
+            CREATE TABLE member
+            ( mem_id CHAR(8) NOT NULL PRIMARY KEY,
+              mem_name VARCHAR(10) NOT NULL,
+              mem_number TINYINT NOT NULL,
+              addr CHAR(2) NOT NULL,
+              phone1 CHAR(3),
+              phone2 CHAR(8),
+              height TINYINT UNSIGNED,
+              debut_date DATE
+            );
+            ```
+            * mem_id can be CHAR(3)/VARCHAR(3)/CHAR(8)/VARCHAR(8)
+                - but CHAR(8) is most efficient
+            * phone1 and phone2 can be numeric data type
+                - but it has no meaning as an integer
+                    + arithmetic operation
+                    + size comparison
+                - 0 in front of the string disappears <br><br>
+        + Large amount of string data
+            ```SQL
+            CREATE TABLE big_table (
+                data1 CHAR(256), --column length too big error
+                data2 VARCHAR(16384) ); --column length too big error
+            ```
+            |data type||byte|
+            |---|---|---|
+            |TEXT|TEXT|1~65535|
+            ||LONGTEXT|1~4294967295|
+            |BLOB|BLOB|1~65535|
+            ||LONGBLOB|1~4294967295|
+            * TEXT and LONGTEXT are for long script.
+            * BLOB means Binary Long Object, like images and videos (binary data)
+            * example
+                ```SQL
+                CREATE DATABASE netflix_db;
+                USE netflix_db;
+                CREATE TABLE movie
+                   (movie_id       INT,
+                    movie_title    VARCHAR(30),
+                    movie_director VARCHAR(20),
+                    movie_star     VARCHAR(20),
+                    movie_script   LONGTEXT,
+                    movie_film     LONGBLOB
+                )
+    - Approximate Numeric Data Type
+        |data type|byte|description|
+        |-|-|-|
+        |FLOAT|4|7 decimal places|
+        |DOUBLE|8|15 decimal places|
+    
+    - Data and Time data type
+        |data type|byte|description|
+        |-|-|-|
+        |DATE|3|YYYY-MM-DD|
+        |TIME|3|HH:MM:SS|
+        |DATETIME|8|YYYY-MM-DD HH:MM:SS|
+    
+    - Using Variables
+        * SQL can declare variable and set value, but closing MySQL will delete the variables
+        * how to use variables
+            - SET @variablename = value ;
+            - SELECT @variablename ;
+                ```SQL
+                USE market_db;
+                SET @myVar1 = 5 ;
+                SET @myVar2 = 4.25 ;
+
+                SELECT @myVar1 ;
+                SELECT @myVar1 + @myVar2 ;
+
+                SET @txt = 'singer name==> ' ;
+                SET @height = 166 ;
+                SELECT @txt , mem_name FROM member WHERE height > @height ;
+                ```
+                + Using variable and retrieving data from the table
+                <br>
+                + Using LIMIT with variables
+                    ```SQL
+                    SET @count =3;
+                    SELECT mem_name, height FROM member ORDER BY height LIMIT @count; -- error, LIMIT cannot have variables
+                    ```
+                <br>
+                + Solution using PREPARE and EXECUTE.
+
+                ```SQL
+                SET @count = 3;
+                PREPARE mySQL FROM 'SELECT mem_name, height FROM member ORDER BY height LIMIT ?';
+                EXECUTE mySQL USING @count;
+                ```
+                * PREPARE doesn't execute but prepare the SQL statement and EXECUTE executes it
+                * ? takes value from what comes after USING
+                <br><br>
+    * Data Type Conversion
+        - Explicit conversion using functions
+            + CAST(), CONVERT()
+            + Format
+                * CAST ( value AS data_type [ (length) ])
+                * CONVERT ( value, data_type [ (length) ])
+            + Example
+                ```SQL
+                SELECT AVG(price) AS 'average price' FROM buy;
+                ```
+                ```SQL
+                142.9167
+                ```
+                ```SQL
+                 SELECT CAST(AVG(price) AS SIGNED) 'average price' FROM buy ; -- SIGNED is SIGNED INTEGER and UNSIGNED is UNSIGNED INTEGER
+                 SELECT CONVERT(AVG(price) , SIGNED) 'average price' FROM buy ;
+                ```
+                ```SQL
+                143
+                ```
+                ```SQL
+                SEELCT CAST('2022$12$12' AS DATE);
+                SEELCT CAST('2022/12/12' AS DATE);
+                SEELCT CAST('2022%12%12' AS DATE);
+                SEELCT CAST('2022@12@12' AS DATE);
+                ```
+                ```SQL
+                2020-12-12
+                ```
+                ```SQL
+                SELECT num, CONCAT(CAST(price AS CHAR), 'X', CAST(amount AS CHAR), '=' ) 'priceXamount', price*amount 'purchase amount'
+                FROM buy;
+                ```
+                * CONCAT() concatenates strings
+                <br>
+        - Implicit Conversion
+            ```SQL
+            SELECT '100' + '200' ; -- Automatically convert string to numeric
+            SELECT CONCAT('100','200'); -- how to concatenate strings
+            SELECT CONCAT(100,'200'); -- Automatically convert numeric to string
+            SELECT 100 + '200'; -- Automatically convert string to numeric
+            ```
+
 ***
 Table and View
 ---
