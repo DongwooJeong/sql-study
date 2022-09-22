@@ -748,6 +748,119 @@ SQL Advanced Grammar
             SELECT CONCAT(100,'200'); -- Automatically convert numeric to string
             SELECT 100 + '200'; -- Automatically convert string to numeric
             ```
+### 4-2. Join
+* Join: combine rows from two or more tables, based on a related column between them
+    - Inner Join
+        + In order to Join, table should be connected as one to many relationship
+            * One to many relationship: one record(PK) in a table can be associated with one or more records(FK) in another table
+        + most common type of join
+        + join can be done with 3 or more tables, but mostly 2
+        + format
+            * SELECT <row list>
+              FROM <first table>
+                INNER JOIN <second table>
+                ON (Join condition)
+                [WHERE search condition]
+            ```SQL
+            USE market_db;
+            SELECT *
+                FROM buy
+                    INNER JOIN member
+                    ON buy.mem_id = member.mem_id
+                WHERE buy.mem_id = 'GRL';
+            ```
+            <br><br>
+            * need to specify from which table we use the common row_name
+                - table_name.row_name
+            <br><br>
+            * use alias to simplify the code
+            ```SQL
+            SELECT B.mem_id, M.mem_name, B.prod_name, M.addr, CONCAT(M.phone, M.phone2) 'contact'
+                FROM buy B
+                    INNER JOIN member M
+                    ON B.mem_id = M.mem_id;
+            ```
+            <br><br>
+            * Inner join only shows the record that has a content in both tables.
+                - If you want to see the record that has has a content in at least one of the tables, use OUTER JOIN
+            * use DISTINCT to remove duplicates in the result
+            ```SQL
+            SELECT DISTINCT M.mem_id, M.mem_name, M.addr
+                FROM buy B
+                    INNER JOIN member M
+                    ON B.mem_id = M.mem_id
+                    ORDER BY M.mem_id;
+    - Outer Join
+        + Outer Join: return matched values and unmatched values from either or both tables
+        + format
+            * SELECT <row list>
+              FROM <first(LEFT) table>
+                <LEFT|RIGHT|FULL> OUTER JOIN <second(RIGHT) table>
+                ON (Join condition)
+                [WHERE search condition]
+            ```SQL
+            SELECT M.mem_id, M.mem_name, B.prod_name, M.addr
+                FROM member M
+                    LEFT OUTER JOIN buy B
+                    ON M.mem_id = B.mem_id
+                ORDER BY M.mem_id;
+            ```
+            * LEFT OUTER JOIN = LEFT JOIN: contents from the left table should all be printed
+            <br><br>
+            * Same result using RIGHT JOIN
+            ```SQL
+            SELECT M.mem_id, M.mem_name, B.prod_name, M.addr
+                FROM buy B
+                    RIGHT OUTER JOIN member M
+                    ON M.mem_id = B.mem_id
+                    ORDER BY M.mem_id;
+            ```
+            <br><br>
+            * utilizing Outer Join
+            ```SQL
+            SELECT DISTINCT M.mem_id, B.prod_name, M.mem_name, M.addr
+                FROM member M
+                    LEFT OUTER JOIN buy B
+                    ON M.mem_id = B.mem_id
+                WHERE B.prod_name IS NULL
+                ORDER BY M.mem_id;
+            ```
+            <br><br>
+            * FULL OUTER JOIN: a conbination of LEFT OUTER JOIN and RIGHT OUTER JOIN
+    - Other Joins
+        * Cross Join: generate a paired combination of each row of the first table with each row of the second table
+            - also known as cartesian product
+            ```SQL
+            SELECT *
+                FROM buy
+                CROSS JOIN member ;
+            ```
+            - cannot use ON
+            - randomly join, no meaning in the result
+            - main purpose is to create a large amount of data
+            ```SQL
+            SELECT COUNT(*) "# of data"
+                FROM sakila.inventory
+                    CROSS JOIN world.city;
+            ```
+            - in order to create a table with this data, use CREATE TABLE ~ SELECT statement
+        * Self Join: joining table itself (using 1 table)
+            - format
+                * SELECT <row list>
+                  FROM <table> alias_a
+                    INNER JOIN <table> alias_b
+                    ON (Join condition)
+                [WHERE search condition]
+                ```SQL
+                SELECT A.emp "employee", B.emp "boss", B.phone "boss contact"
+                    FROM emp_table A
+                        INNER JOIN emp_table B
+                        ON A.manager = B.emp
+                    WHERE A.emp = 'chief of accounting';
+                ```
+                * same data in one table, but exists in more than 2 rows
+                
+
 
 ***
 Table and View
