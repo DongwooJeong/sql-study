@@ -864,6 +864,261 @@ SQL Advanced Grammar
                 ```
                 * Same data in one table, but exists in more than 2 rows
                 
+### 4-3. SQL Programming
+* Stored Procedure: a database entity when we need programing within MySQL; a prepared SQL code that you can save
+    - Structure of Stored Procedure
+        ```SQL
+        DELIMITER $$ 
+        CREATE PROCEDURE
+        BEGIN
+        (Coding here)
+        END $$
+        DELIMITER ;
+        CALL (Name of Stored Procedure)
+        ```
+    * IF Statement
+        - Basic Format
+        ```SQL
+        IF <conditional statement>
+        THEN
+            SQL statement
+        END IF;
+        ```
+    + if there are more than two sql statements, use BEGIN ~ END<br><br>
+        - Example
+            ```SQL
+            DROP PROCEDURE IF EXISTS ifProc1;
+            DELIMITER $$
+            CREATE PROCEDURE ifProc1()
+            BEGIN
+                IF 100 = 100 THEN
+                    SELELCT '100 is equal to 100.';
+                END IF;
+            END $$
+            DELIMITER ;
+            CALL ifProc1();
+            ```
+            1) drop procedure named ifProc1() if it was created before
+            2) '$$' distinguishes SQL and stored procedure<br><br>
+    * IF ELSE Statement
+        - Example
+            ```SQL
+            DROP PROCEDURE IF EXISTS ifProc2;
+            DELIMITER $$
+            CREATE PROCEDURE ifProc2()
+            BEGIN
+                DECLARE myNum INT;
+                SET myNum = 200;
+                IF myNum = 100 THEN
+                    SELELCT '100';
+                ELSE
+                    SELECT 'not 100';
+                END IF;
+            END $$
+            DELIMITER ;
+            CALL ifProc2();
+            ```
+            1) DECLARE: declare variable and data type at the end
+            2) SET: set value to a variable<br><br>
+    * Using IF Statement
+        ```SQL
+        DROP PROCEDURE IF EXISTS ifProc3;
+        DELIMITER $$
+        CREATE PROCEDURE ifProc3()
+        BEGIN
+            DECLARE debutDate DATE;
+            DECLARE curDate DATE;
+            DECLARE days INT;
+            
+            SELECT debut_date INTO debutDate
+                FROM market_db.member
+                WHERE mem_id = 'APN';
+            
+            SET curDATE = CURRENT_DATE();
+            SET days = DATEDIFF(curDATE, debutDate);
+
+            IF (days/365) >= 5 THEN
+                SELECT CONCAT("It's been ", days, "since debut. Congrats!");
+            ELSE
+                SELECT "It's been only", days, "since debut. Cheer up!";
+            END IF;       
+        END $$
+        DELIMITER ;
+        CALL ifProc3();
+        ```
+        1) SELECT~INTO-: save ~ into -(variable)
+        2) CURRENT_DATE(): current date
+        3) DATEDIFF(): date difference between two arguments
+        <br><br>
+    * Case Statement
+        - Unlike IF Statement dealing with only two cases(TRUE or FALSE), CASE Statement can handle more than two cases
+            + similar to switch~case in other programming languages
+        - Basic Format
+        ```SQL
+        CASE
+            WHEN (condition1) THEN
+                (SQL Statements1)
+            WHEN (condition2) THEN
+                (SQL Statements2)
+            WHEN (condition3) THEN
+                (SQL Statements3)
+            ELSE
+                (SQL Statements4)
+        END CASE;
+        ```
+        - Example
+        ```SQL
+        DROP PROCEDURE IF EXISTS caseProc;
+        DELIMITER $$
+        CREATE PROCEDURE caseProc()
+        BEGIN
+            DECLARE point INT ;
+            DECLARE credit CHAR(1);
+            SET point = 88;
+
+            CASE
+                WHEN point >= 90 THEN
+                    SET credit = 'A';
+                WHEN point >= 80 THEN
+                    SET credit = 'B';
+                WHEN point >= 70 THEN
+                    SET credit = 'C';
+                WHEN point >= 60 THEN
+                    SET credit = 'D';
+                ELSE
+                    SET credit = 'F';
+            END CASE;
+
+            SELECT CONCAT('score: ', point), CONCAT('grade: ', credit);
+        END $$
+        DELIMITER ;
+        CALL caseProc();
+        ```
+    * Using CASE Statement
+        ```SQL
+        USE market_db;
+        DROP PROCEDURE IF EXISTS caseProc2;
+        DELIMITER $$
+        CREATE PROCEDURE caseProc2()
+            BEGIN		
+                SELECT M.mem_id, M.mem_name, SUM(price*amount) "total purchase", 
+                    CASE
+                        WHEN sum(price*amount) >= 1500 THEN 'VIP'
+                        WHEN sum(price*amount) >= 1000 THEN 'GOLD'
+                        WHEN sum(price*amount) >= 1 THEN 'Regular'
+                        ELSE 'Inactive'
+                    END "membership"
+                FROM buy B
+                    RIGHT OUTER JOIN member M
+                    ON B.mem_id = M.mem_id
+                GROUP BY M.mem_id
+                ORDER BY SUM(price*amount) DESC ;
+            END $$
+            DELIMITER ;
+        CALL caseProc2();
+        ```
+    * WHILE Statement
+        - Sets a condition for the repeated execution of an SQL statement or statement block
+        - Basic Format
+        ```SQL
+        WHILE (condition) DO
+            SQL statements
+        END WHILE;
+        ```
+        <br>
+        
+        - Adding from 1 to 100
+        
+        ```SQL
+        DROP PRPCEDIRE IF EXISTS whileProc;
+        DELIMITER $$
+        CREATE PROCEDURE whileProc()
+        BEGIN
+            DECLARE i INT;
+            DECLARE hap INT;
+            SET i = 1;
+            SET hap = 0;
+
+            WHILE (i <= 100) DO
+                SET hap = hap + i;
+                SET i = i + 1;
+            END WHILE;
+            SELECT 'sum from 1 to 100 ==>', hap; 
+        END $$
+        DELIMITER ;
+        CALL whileProc();
+        ```
+    
+        - Using WHILE Statement
+
+            ```SQL
+            DROP PROCEDURE IF EXISTS whileProc2;
+            DELIMITER $$
+            CREATE PROCEDURE whileProc2()
+                BEGIN
+                    DECLARE i INT;
+                    DECLARE hap INT;
+                    SET i = 1;
+                    SET hap = 0;
+
+                myWhile: --designating WHILE Statement as a label myWhile
+                WHILE (i <= 100) DO
+                    IF (i%4 = 0) THEN
+                        SET i = i + 1;
+                        ITERATE myWhile;
+                    END IF;
+                    SET hap = hap + i;
+                    IF (hap > 1000) THEN
+                        LEAVE myWhile;
+                    END IF;
+                    SET i = i + 1;
+                END WHILE;
+
+                SELECT 'sum from 1 to 100(except multiple of 4), end if sum is over 1000 ==>', hap; 
+            END $$
+            DELIMITER ;
+            CALL whileProc2();
+            ```
+            + ITERATE: proceed with the loop (go back to label)
+            + LEAVE: break the loop
+<br><br>
+    * Dynamic SQL
+        - SQL statement that is constructed and executed at runtime based on input parameters passed
+        - PREPARE & EXECUTE ~ DEALLOCATE PREPARE
+        - Example
+            ```SQL
+            use market_db;
+            PREPARE myQuery FROM 'SELECT * FROM member WHERE mem_id = "BLK"';
+            EXECUTE myQuery;
+            DEALLOCATE PREPARE myQuery
+            ```
+        <br>        
+        - PREPARE Statement has "?" value to be entered later so that the SQL statement is executed in real time
+
+        - Example
+            ```SQL
+            DROP TABLE IF EXISTS gate_table;
+            CREATE TABLE gate_table (id INT AUTO_INCREMENT PRIMARY KEY, entry_time DATETIME);
+
+            SET @curDate = CURRENT_TIMESTAMP();
+
+            PREPARE myQuery FROM 'INSERT INTO gate_table VALUES(NULL, ?)';
+            EXECUTE myQuery USING @curDate;
+            DEALLOCATE PREPARE myQuery;
+
+            SELECT * FROM gate_table;
+            ```
+            + The time is recorded on the table by the INSERT statement when a pass is tagged in real time
+
+        
+
+
+
+
+
+
+
+
 
 
 ***
