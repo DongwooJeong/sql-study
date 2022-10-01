@@ -1110,20 +1110,19 @@ SQL Advanced Grammar
             ```
             + The time is recorded on the table by the INSERT statement when a pass is tagged in real time
 
-        
-
-
-
-
-
-
-
-
-
-
 ***
 Table and View
 ---
+### 5-1. Table
+* Table: row(record) and column(field)
+    - how to build table
+        1. table name
+        2. column name
+        3. data type for each field
+        4. private key, foreign key
+
+
+
 ***
 Index
 ---
