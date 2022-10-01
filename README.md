@@ -1116,12 +1116,62 @@ Table and View
 ### 5-1. Table
 * Table: row(record) and column(field)
     - how to build table
-        1. table name
+        1. table name    
         2. column name
         3. data type for each field
-        4. private key, foreign key
+        4. private key, foreign key (connect two tables)
+        <br><br>
+    * Create database
+        * Drop(to remove duplicate) and create database
+            ```SQL
+            DROP DATABASE IF EXISTS naver_db;
+            CREATE DATABASE naver_db;
+            ```
+    * Create Table
+        - Basic Format
+            ```SQL
+            CREATE TABLE sample_table (num INT);
+            ```
 
-
+        - member table
+            ```SQL
+            USE naver_db;
+            DROP TABLE IF EXISTS member;
+            CREATE TABLE member
+            ( mem_id        CHAR(8) NOT NULL PRIMARY KEY,
+              mem_name      VARCHAR(10) NOT NULL,
+              mem_number    TINYINT NOT NULL,
+              addr          VARCHAR(10) NOT NULL,
+              phone1        CHAR(3) NULL,
+              phone2        CHAR(8) NULL,
+              height        TINYINT UNSIGNED NULL,
+              debut_date    DATE NULL
+            );
+            ```
+        - buy table
+            ```SQL
+            DROP TABLE IF EXISTS BUY;
+            CREATE TABLE buy
+            ( num           INT AUTO_INCREMENT NOT NULL PRIMARY KEY,
+              mem_id        CHAR(8) NOT NULL,
+              prod_name     CHAR(10) NOT NULL,
+              group_name    CHAR(10) NULL,
+              price         INT UNSIGNED NOT NULL,
+              amount        SMALLINT UNSIGNED NOT NULL
+              FOREIGN KEY(mem_id) REFERENCES member(mem_id)
+            );
+    * Insert Value
+        - member table
+            ```SQL
+            INSERT INTO member VALUES('TWC', 'twice', '9', 'seoul', '02', '11111111', 167, '2015-10-19');
+            INSERT INTO member VALUES('BLK', 'blackpink', '4', 'gyeongnam', '055', '22222222', 163, '2016-8-8');
+            INSERT INTO member VALUES('WMN', 'girlfriend', '6', 'gyeonggi', '031', '33333333', 166, '2015-1-15');
+            ```
+        - buy table
+            ```SQL            
+            INSERT INTO buy VALUES(NULL, 'BLK', 'purse', NULL, 30, 2);
+            INSERT INTO buy VALUES(NULL, 'BLK', 'macbookpro', 'digital', 1000, 1);
+            ```
 
 ***
 Index
