@@ -63,94 +63,94 @@ Preview of SQL for Real Use
 * Procedure for building a database
     > *Create a database - Create tables - Enter / Modify / Delete data - Look up / Utilize the data*
 
-1. Creating a *Schema*
-    - Schema = Database
-    - Creating a schema named 'shop_db'
-        ```SQL
-        CREATE SCHEMA 'shop_db' ;
-        ```
-    
-2. Creating tables
-    - Design a table first, specifying the column name and data type
-        - Data type examples: CHAR (Character), INT (Integer), DATE
-        - Not Null: Data must be entered
-        - Having a space between each word is not recommended, so "_ (underscore)" can replace it
-    - Creating a 'member' table
-        ``` SQL  
-        CREATE TABLE `shop_db`.`member` (
-         `member_id` CHAR(8) NOT NULL,
-         `member_name` CHAR(5) NOT NULL,
-         `member_addr` CHAR(20) NULL,
-         PRIMARY KEY (`member_id`));
-        ```
-    - Creating a 'product' table 
-        ```SQL
-        CREATE TABLE `shop_db`.`product` (
-         `product_name` CHAR(4) NOT NULL,
-         `cost` INT NOT NULL,
-         `make_date` DATE NULL,
-         `company` CHAR(5) NULL,
-         `amount` INT NOT NULL,
-         PRIMARY KEY (`product_name`));
-        ```
-
-3. Enter/Add/Modify/Delete data
-    - Entering data into the 'member' table
-        ```SQL
-        INSERT INTO `shop_db`.`member` (`member_id`, `member_name`, `member_addr`) VALUES ('tess', 'Hoona', 'Bucheon');
-        INSERT INTO `shop_db`.`member` (`member_id`, `member_name`, `member_addr`) VALUES ('hero', 'Young', 'Seoul');
-        INSERT INTO `shop_db`.`member` (`member_id`, `member_name`, `member_addr`) VALUES ('iyou', 'IU', 'Incheon');
-        INSERT INTO `shop_db`.`member` (`member_id`, `member_name`, `member_addr`) VALUES ('jyp', 'JinY', 'Goyang');
-        ```
-    - Entering data into the 'product' table
-        ```SQL
-        INSERT INTO `shop_db`.`product` (`product_name`, `cost`, `make_date`, `company`, `amount`) VALUES ('bana', '1500', '2021-07-01', 'delmo', '17');
-        INSERT INTO `shop_db`.`product` (`product_name`, `cost`, `make_date`, `company`, `amount`) VALUES ('samk', '800', '2023-09-01', 'CJ', '22');
-        INSERT INTO `shop_db`.`product` (`product_name`, `cost`, `make_date`, `company`, `amount`) VALUES ('cass', '2500', '2022-03-01', 'OB', '3');
-        ```
-        - Be careful to enter the data according to the datatype
-
-    - Adding data to the 'member' table
-        ```SQL
-        INSERT INTO `shop_db`.`member` (`member_id`, `member_name`, `member_addr`) VALUES ('carry', 'Maria', 'Texas');
-        ```
-    - Modifying data in the 'member' table
-        ```SQL
-        UPDATE `shop_db`.`member` SET `member_addr` = 'London' WHERE (`member_id` = 'carry');
-        ```
-    - Deleting data from the 'member' table
-        ```SQL
-        DELETE FROM `shop_db`.`member` WHERE (`member_id` = 'carry');
-        ```
-4. Utilizing data
-    * In SQL, SELECT statements are mainly used to utilize database.
-        - *Reserved Words*: Previously defined SQLs, such as SELCECT or WHERE.
-        <br><br>
-    * Procedures to execute queries
-        1) Click on "Create a new SQL tab for executing queries" icon from the toolbar or [File] - [New Query Tab].
-        2) Double click on the schema that you want to utilize and make sure that the name of the schema is bolded.
-
-        3) Look up data in the table
-        > SELECT column_name FROM table_name [WHERE condition] 
-        * Looking up all the rows in the table
+    1. Creating a *Schema*
+        - Schema = Database
+        - Creating a schema named 'shop_db'
             ```SQL
-            SELECT * FROM member;
+            CREATE SCHEMA 'shop_db' ;
             ```
-            * \* means every column
+        
+    2. Creating tables
+        - Design a table first, specifying the column name and data type
+            - Data type examples: CHAR (Character), INT (Integer), DATE
+            - Not Null: Data must be entered
+            - Having a space between each word is not recommended, so "_ (underscore)" can replace it
+        - Creating a 'member' table
+            ``` SQL  
+            CREATE TABLE `shop_db`.`member` (
+            `member_id` CHAR(8) NOT NULL,
+            `member_name` CHAR(5) NOT NULL,
+            `member_addr` CHAR(20) NULL,
+            PRIMARY KEY (`member_id`));
+            ```
+        - Creating a 'product' table 
+            ```SQL
+            CREATE TABLE `shop_db`.`product` (
+            `product_name` CHAR(4) NOT NULL,
+            `cost` INT NOT NULL,
+            `make_date` DATE NULL,
+            `company` CHAR(5) NULL,
+            `amount` INT NOT NULL,
+            PRIMARY KEY (`product_name`));
+            ```
+
+    3. Enter/Add/Modify/Delete data
+        - Entering data into the 'member' table
+            ```SQL
+            INSERT INTO `shop_db`.`member` (`member_id`, `member_name`, `member_addr`) VALUES ('tess', 'Hoona', 'Bucheon');
+            INSERT INTO `shop_db`.`member` (`member_id`, `member_name`, `member_addr`) VALUES ('hero', 'Young', 'Seoul');
+            INSERT INTO `shop_db`.`member` (`member_id`, `member_name`, `member_addr`) VALUES ('iyou', 'IU', 'Incheon');
+            INSERT INTO `shop_db`.`member` (`member_id`, `member_name`, `member_addr`) VALUES ('jyp', 'JinY', 'Goyang');
+            ```
+        - Entering data into the 'product' table
+            ```SQL
+            INSERT INTO `shop_db`.`product` (`product_name`, `cost`, `make_date`, `company`, `amount`) VALUES ('bana', '1500', '2021-07-01', 'delmo', '17');
+            INSERT INTO `shop_db`.`product` (`product_name`, `cost`, `make_date`, `company`, `amount`) VALUES ('samk', '800', '2023-09-01', 'CJ', '22');
+            INSERT INTO `shop_db`.`product` (`product_name`, `cost`, `make_date`, `company`, `amount`) VALUES ('cass', '2500', '2022-03-01', 'OB', '3');
+            ```
+            - Be careful to enter the data according to the datatype<br><br>
+
+        - Adding data to the 'member' table
+            ```SQL
+            INSERT INTO `shop_db`.`member` (`member_id`, `member_name`, `member_addr`) VALUES ('carry', 'Maria', 'Texas');
+            ```
+        - Modifying data in the 'member' table
+            ```SQL
+            UPDATE `shop_db`.`member` SET `member_addr` = 'London' WHERE (`member_id` = 'carry');
+            ```
+        - Deleting data from the 'member' table
+            ```SQL
+            DELETE FROM `shop_db`.`member` WHERE (`member_id` = 'carry');
+            ```
+    4. Utilizing data
+        * In SQL, SELECT statements are mainly used to utilize database.
+            - *Reserved Words*: Previously defined SQLs, such as SELCECT or WHERE.
             <br><br>
-        4) Click on "Execute the selected portion of the script or everything" icon to see the result on the [Result Grid], and result, duration, and fetch on the [Output] panel.
-            -  Can also use [Query] - [Execute (All or Selection)] or Ctrl+Shift+Enter
-    <br><br>
-        * Only looking up 'member_name' and 'member_addr' column from the 'member' table
-            ```SQL
-            SELECT member_name, member_addr From member;
-            ```
+        * Procedures to execute queries
+            1) Click on "Create a new SQL tab for executing queries" icon from the toolbar or [File] - [New Query Tab].
+            2) Double click on the schema that you want to utilize and make sure that the name of the schema is bolded.
 
-        * Only looking up the member's data whose member_name is 'IU'
-            ```SQL
-            SELECT * FROM member WHERE member_name = 'IU';
-            ```
-        * When there are two different SQLs, DBMS performs both of them. Therefore, you can drag and select the SQL you want to execute so that DBMS can only execute the specified SQL.
+            3) Look up data in the table
+            > SELECT column_name FROM table_name [WHERE condition] 
+            * Looking up all the rows in the table
+                ```SQL
+                SELECT * FROM member;
+                ```
+                * \* means every column
+                <br><br>
+            4) Click on "Execute the selected portion of the script or everything" icon to see the result on the [Result Grid], and result, duration, and fetch on the [Output] panel.
+                -  Can also use [Query] - [Execute (All or Selection)] or Ctrl+Shift+Enter
+        <br><br>
+            * Only looking up 'member_name' and 'member_addr' column from the 'member' table
+                ```SQL
+                SELECT member_name, member_addr From member;
+                ```
+
+            * Only looking up the member's data whose member_name is 'IU'
+                ```SQL
+                SELECT * FROM member WHERE member_name = 'IU';
+                ```
+            * When there are two different SQLs, DBMS performs both of them. Therefore, you can drag and select the SQL you want to execute so that DBMS can only execute the specified SQL.
 ### 2-3. Database Object
 * There are several **database objects** that are mutually related to the table, a key object in the database, such as *index, view, or stored procedure*.
     <br><br>
@@ -220,8 +220,9 @@ SQL Basic Grammar
 ---
 ### 3-1. Select ~ From ~ Where
 * Select: Retrieve data from the table
-    - Basic format: SELECT (Row name) FROM (Table name) WHERE (Condition)
-<br><br>
+    - Basic format
+        > SELECT (Row name) FROM (Table name) WHERE (Condition)
+
 * Creating a database called market_db
     ```SQL
     DROP DATABASE IF EXISTS market_db;
@@ -277,15 +278,14 @@ SQL Basic Grammar
     SELECT * FROM buy;
     ```
 * Structure of SELECT statement
-    ```SQL
-    SELECT select_expr
-    [FROM table_references]
-    [WHERE where_condition]
-    [GROUP BY {col_name | expr | position}]
-    [HAVING where_condition]
-    [ORDER BY {col_name | expr | position}]
-    [LIMIT {[offset,] row_count | row_count OFFSET offset}]
-    ```
+    > SELECT select_expr <br>
+    [FROM table_references]<br>
+    [WHERE where_condition]<br>
+    [GROUP BY {col_name | expr | position}]<br>
+    [HAVING where_condition]<br>
+    [ORDER BY {col_name | expr | position}]<br>
+    [LIMIT {[offset,] row_count | row_count OFFSET offset}]<br>
+    
 * SELECT and FROM
      ```SQL
     USE market_db;
@@ -417,83 +417,85 @@ SQL Basic Grammar
     ```SQL
     SELECT mem_id "member id", SUM(price*amount) "total purchase" FROM buy GROUP BY mem_id HAVING SUM(price*amount) > 1000 ORDER BY SUM(price*amount) DESC;
     ```
+    - Used with ORDER BY
 ### 3-3. SQL for data manipulation
 * INSERT: enter row data into the table
-    - INSERT INTO table[(row1, row2, ...)] VALUES (value1, value2, ...)
-    ```SQL
-    USE market_db;
-    CREATE TABLE hongong1 (toy_id INT, toy_name CHAR(4), age INT);
-    INSERT INTO hongong1 VALUES (1, 'woody', 25);
-    INSERT INTO hongong1 (toy_id, toy_name) VALUES (2, 'Buzz');
-    ``` 
+    > INSERT INTO table[(row1, row2, ...)] VALUES (value1, value2, ...)
+    * Example
+        ```SQL
+        USE market_db;
+        CREATE TABLE hongong1 (toy_id INT, toy_name CHAR(4), age INT);
+        INSERT INTO hongong1 VALUES (1, 'woody', 25);
+        INSERT INTO hongong1 (toy_id, toy_name) VALUES (2, 'Buzz');
+        ``` 
     - Specifies column names if you don't want to enter data for all columns
         + Null value for Unspecified columns
-    ```SQL
-    INSERT INTO hongong1 (toy_name, age, toy_id) VALUES ('Jessie', 20, 3);
-    ```
-    - Can change the order of the column
+        ```SQL
+        INSERT INTO hongong1 (toy_name, age, toy_id) VALUES ('Jessie', 20, 3);
+        ```
+        + Can change the order of the column
     <br><br>
-    AUTO_INCREMENT: enters the value increasing from 1, should be a primary key
-    ```SQL
-    CREATE TABLE hongong2 ( toy_id INT AUTO INCREMENT PRIMARY KEY, toy_name CHAR(4) age INT);
-    INSERT INTO hongong2 VALUES(NULL, 'Bo peep', 25);
-    INSERT INTO hongong2 VALUES(NULL, 'Slinky', 22);
-    INSERT INTO hongong2 VALUES(NULL, 'Rex', 21);
-    SELECT * FROM hongong2;
-    ```
-    - Enter NULL for AUTO_INCREMENT
+    - AUTO_INCREMENT: enters the value increasing from 1, should be a primary key
+        ```SQL
+        CREATE TABLE hongong2 ( toy_id INT AUTO INCREMENT PRIMARY KEY, toy_name CHAR(4) age INT);
+        INSERT INTO hongong2 VALUES(NULL, 'Bo peep', 25);
+        INSERT INTO hongong2 VALUES(NULL, 'Slinky', 22);
+        INSERT INTO hongong2 VALUES(NULL, 'Rex', 21);
+        SELECT * FROM hongong2;
+        ```
+        + Enter NULL for AUTO_INCREMENT
     <br><br>
-    ```SQL
-    SELECT LAST_INSERT_ID();
-    ```
-    - The result is 3, which means that with AUTO_INCREMENT, entered up to 3
+        ```SQL
+        SELECT LAST_INSERT_ID();
+        ```
+        - The result is 3, which means that with AUTO_INCREMENT, entered up to 3
     <br><br>
-    ```SQL
-    ALTER TABLE hongong2 AUTO_INCREMENT=100;
-    INSERT INTO honghong2 VALUES (NULL, 'jenam' 35);
-    SELECT * FROM hongong2;
-    ```
-    - Change the beginning AUTO_INCREMENT value to 100
+        ```SQL
+        ALTER TABLE hongong2 AUTO_INCREMENT=100;
+        INSERT INTO honghong2 VALUES (NULL, 'jenam' 35);
+        SELECT * FROM hongong2;
+        ```
+        - Change the beginning AUTO_INCREMENT value to 100
     <br><br>
-    ```SQL
-    CREATE TABLE hongong3 (
-        toy_id INT AUTO_INCREMENT PRIMARY KEY,
-        toy_name CHAR(4),
-        age INT);
-    ALTER TABLE hongong3 AUTO_INCREMENT=1000;
-    SET @@auto_increment_increment=3;
-    ```
-    - AUTO_INCREMENT value increases from 1000 by 3
+        ```SQL
+        CREATE TABLE hongong3 (
+            toy_id INT AUTO_INCREMENT PRIMARY KEY,
+            toy_name CHAR(4),
+            age INT);
+        ALTER TABLE hongong3 AUTO_INCREMENT=1000;
+        SET @@auto_increment_increment=3;
+        ```
+        - AUTO_INCREMENT value increases from 1000 by 3
     <br><br>
-    ```SQL
-    INSERT INTO hongong3 VALUES (NULL, 'thomas', 20);
-    INSERT INTO hongong3 VALUES (NULL, 'james', 23);
-    INSERT INTO hongong3 VALUES (NULL, 'gordon', 25);
-    SELECT * FROM hongong3;
-    ```
-    - toy_id goes like "1000, 1003, 1006, ..."
+        ```SQL
+        INSERT INTO hongong3 VALUES (NULL, 'thomas', 20);
+        INSERT INTO hongong3 VALUES (NULL, 'james', 23);
+        INSERT INTO hongong3 VALUES (NULL, 'gordon', 25);
+        SELECT * FROM hongong3;
+        ```
+        - toy_id goes like "1000, 1003, 1006, ..."
     <br><br>
-    ```SQL
-    INSERT INTO hongong3 VALUES (NULL, 'thomas', 20), (NULL, 'james', 23), (NULL, 'gordon', 25)
-    ```
-    - Same as the previous code
+        ```SQL
+        INSERT INTO hongong3 VALUES (NULL, 'thomas', 20), (NULL, 'james', 23), (NULL, 'gordon', 25)
+        ```
+        - Same as the previous code
     <br><br>
     - INSERT INTO ~ SELECT: retrieve data from other table to insert data
     - INSERT INTO table_name (row_name1, row_name2, ...) SELECT ;
     - Number of columns in SELECT should match that in the table to be inserted
     - Using world.city table, sue INSERT INTO ~ SELECT
-    ```SQL
-    SELECT COUNT(*) FROM world.city;
-    DESC world.city;
-    SELECT * FROM world.city LIMIT 5; 
-    ```
+        ```SQL
+        SELECT COUNT(*) FROM world.city;
+        DESC world.city;
+        SELECT * FROM world.city LIMIT 5; 
+        ```
     - Checking some info about world.city table
-    ```SQL
-    CREATE TABLE city_popul (city_name CHAR(35), population INT);
-    INSERT INTO city_popul SELECT Name, Population FROM world.city;
-    ```
+        ```SQL
+        CREATE TABLE city_popul (city_name CHAR(35), population INT);
+        INSERT INTO city_popul SELECT Name, Population FROM world.city;
+        ```
 * UPDATE: Modifying data in the table
-    - UPDATE table_name SET row1=value1, row2=value2, ... WHERE condition ;
+    > UPDATE table_name SET row1=value1, row2=value2, ... WHERE condition ;
     ```SQL
     USE market_db;
     UPDATE city_popul SET city_name = '서울'
@@ -521,7 +523,7 @@ SQL Basic Grammar
     - Dividing all values in population column by 1000
 <br><br>
 * DELETE: deletes the data
-    - DELETE FROM table_name WHERE condition ;
+    > DELETE FROM table_name WHERE condition ;
     ```SQL
     DELETE FROM city_popul WHERE city_name Like 'New%';
     ```
@@ -535,14 +537,14 @@ SQL Basic Grammar
     - Deleting top 5 records matching the condition
     <br><br>
     - Deleting a large table
-    ```SQL
-    DELETE FROM big_table1;
-    Drop TABLE big_table2;
-    TRUNCATE TABLE big_table3;
-    ```
-    - DELETE deletes every record, so it takes long time, leaving an empty table
-    - DROP deletes the table itself
-    - TRUNCATE is similar to DELETE, but faster, leaving an empty table, but cannot use WHERE like DELETE
+        ```SQL
+        DELETE FROM big_table1;
+        Drop TABLE big_table2;
+        TRUNCATE TABLE big_table3;
+        ```
+        + DELETE deletes every record, so it takes long time, leaving an empty table
+        + DROP deletes the table itself
+        + TRUNCATE is similar to DELETE, but faster, leaving an empty table, but cannot use WHERE like DELETE
 
 ***
 SQL Advanced Grammar
@@ -591,18 +593,18 @@ SQL Advanced Grammar
                 + TINYINT UNSIGNED is 0 ~ 255
                 <br><br>
             - Correction
-            ```SQL
-            CREATE TABLE member
-            ( mem_id CHAR(8) NOT NULL PRIMARY KEY,
-              mem_name VARCHAR(10) NOT NULL,
-              mem_number TINYINT NOT NULL, -- member number cannot be over 127
-              addr CHAR(2) NOT NULL,
-              phone1 CHAR(3),
-              phone2 CHAR(8),
-              height TINYINT UNSIGNED, -- height cannot be over 256
-              debut_date DATE
-            );
-            ```
+                ```SQL
+                CREATE TABLE member
+                ( mem_id CHAR(8) NOT NULL PRIMARY KEY,
+                mem_name VARCHAR(10) NOT NULL,
+                mem_number TINYINT NOT NULL, -- member number cannot be over 127
+                addr CHAR(2) NOT NULL,
+                phone1 CHAR(3),
+                phone2 CHAR(8),
+                height TINYINT UNSIGNED, -- height cannot be over 256
+                debut_date DATE
+                );
+                ```
     - String Data Type
 
         |data type| byte|
@@ -756,7 +758,7 @@ SQL Advanced Grammar
         + Most common type of join
         + Join can be done with 3 or more tables, but mostly 2
         + Format
-            * SELECT (row list)<br>
+            > SELECT (row list)<br>
               FROM (first table)<br>
                 &emsp;INNER JOIN (second table)<br>
                 &emsp;ON (Join condition)<br>
@@ -795,7 +797,7 @@ SQL Advanced Grammar
     - Outer Join
         + Outer Join: returns matched values and unmatched values from either or both tables
         + Format
-            * SELECT (row list)<br>
+            > SELECT (row list)<br>
               FROM <first(LEFT) table><br>
                 &emsp;<LEFT|RIGHT|FULL> OUTER JOIN <second(RIGHT) table><br>
                 &emsp;ON (Join condition)<br>
@@ -850,7 +852,7 @@ SQL Advanced Grammar
             <br><br>
         * Self Join: joining table itself (using 1 table)
             - Format
-                * SELECT (row list)<br>
+                > SELECT (row list)<br>
                   FROM (table) alias_a<br>
                   &emsp;INNER JOIN (table) alias_b<br>
                   &emsp;ON (Join condition)<br>
@@ -884,7 +886,7 @@ SQL Advanced Grammar
             SQL statement
         END IF;
         ```
-    + if there are more than two sql statements, use BEGIN ~ END<br><br>
+    + if there are more than two sql statements, use BEGIN ~ END<br>
         - Example
             ```SQL
             DROP PROCEDURE IF EXISTS ifProc1;
@@ -954,46 +956,45 @@ SQL Advanced Grammar
         - Unlike IF Statement dealing with only two cases(TRUE or FALSE), CASE Statement can handle more than two cases
             + similar to switch~case in other programming languages
         - Basic Format
-        ```SQL
-        CASE
-            WHEN (condition1) THEN
-                (SQL Statements1)
-            WHEN (condition2) THEN
-                (SQL Statements2)
-            WHEN (condition3) THEN
-                (SQL Statements3)
-            ELSE
-                (SQL Statements4)
+        > CASE<br>
+            WHEN (condition1) THEN<br>
+                (SQL Statements1)<br>
+            WHEN (condition2) THEN<br>
+                (SQL Statements2)<br>
+            WHEN (condition3) THEN<br>
+                (SQL Statements3)<br>
+            ELSE<br>
+                (SQL Statements4)<br>
         END CASE;
-        ```
+        
         - Example
-        ```SQL
-        DROP PROCEDURE IF EXISTS caseProc;
-        DELIMITER $$
-        CREATE PROCEDURE caseProc()
-        BEGIN
-            DECLARE point INT ;
-            DECLARE credit CHAR(1);
-            SET point = 88;
+            ```SQL
+            DROP PROCEDURE IF EXISTS caseProc;
+            DELIMITER $$
+            CREATE PROCEDURE caseProc()
+            BEGIN
+                DECLARE point INT ;
+                DECLARE credit CHAR(1);
+                SET point = 88;
 
-            CASE
-                WHEN point >= 90 THEN
-                    SET credit = 'A';
-                WHEN point >= 80 THEN
-                    SET credit = 'B';
-                WHEN point >= 70 THEN
-                    SET credit = 'C';
-                WHEN point >= 60 THEN
-                    SET credit = 'D';
-                ELSE
-                    SET credit = 'F';
-            END CASE;
+                CASE
+                    WHEN point >= 90 THEN
+                        SET credit = 'A';
+                    WHEN point >= 80 THEN
+                        SET credit = 'B';
+                    WHEN point >= 70 THEN
+                        SET credit = 'C';
+                    WHEN point >= 60 THEN
+                        SET credit = 'D';
+                    ELSE
+                        SET credit = 'F';
+                END CASE;
 
-            SELECT CONCAT('score: ', point), CONCAT('grade: ', credit);
-        END $$
-        DELIMITER ;
-        CALL caseProc();
-        ```
+                SELECT CONCAT('score: ', point), CONCAT('grade: ', credit);
+            END $$
+            DELIMITER ;
+            CALL caseProc();
+            ```
     * Using CASE Statement
         ```SQL
         USE market_db;
@@ -1020,34 +1021,30 @@ SQL Advanced Grammar
     * WHILE Statement
         - Sets a condition for the repeated execution of an SQL statement or statement block
         - Basic Format
-        ```SQL
-        WHILE (condition) DO
-            SQL statements
-        END WHILE;
-        ```
-        <br>
+            > WHILE (condition) DO<br>
+                SQL statements<br>
+            END WHILE;<br>
         
         - Adding from 1 to 100
-        
-        ```SQL
-        DROP PRPCEDIRE IF EXISTS whileProc;
-        DELIMITER $$
-        CREATE PROCEDURE whileProc()
-        BEGIN
-            DECLARE i INT;
-            DECLARE hap INT;
-            SET i = 1;
-            SET hap = 0;
+            ```SQL
+            DROP PRPCEDIRE IF EXISTS whileProc;
+            DELIMITER $$
+            CREATE PROCEDURE whileProc()
+            BEGIN
+                DECLARE i INT;
+                DECLARE hap INT;
+                SET i = 1;
+                SET hap = 0;
 
-            WHILE (i <= 100) DO
-                SET hap = hap + i;
-                SET i = i + 1;
-            END WHILE;
-            SELECT 'sum from 1 to 100 ==>', hap; 
-        END $$
-        DELIMITER ;
-        CALL whileProc();
-        ```
+                WHILE (i <= 100) DO
+                    SET hap = hap + i;
+                    SET i = i + 1;
+                END WHILE;
+                SELECT 'sum from 1 to 100 ==>', hap; 
+            END $$
+            DELIMITER ;
+            CALL whileProc();
+            ```
     
         - Using WHILE Statement
 
@@ -1092,30 +1089,30 @@ SQL Advanced Grammar
             EXECUTE myQuery;
             DEALLOCATE PREPARE myQuery
             ```
-        <br>        
+                
         - PREPARE Statement has "?" value to be entered later so that the SQL statement is executed in real time
 
-        - Example
-            ```SQL
-            DROP TABLE IF EXISTS gate_table;
-            CREATE TABLE gate_table (id INT AUTO_INCREMENT PRIMARY KEY, entry_time DATETIME);
+            - Example
+                ```SQL
+                DROP TABLE IF EXISTS gate_table;
+                CREATE TABLE gate_table (id INT AUTO_INCREMENT PRIMARY KEY, entry_time DATETIME);
 
-            SET @curDate = CURRENT_TIMESTAMP();
+                SET @curDate = CURRENT_TIMESTAMP();
 
-            PREPARE myQuery FROM 'INSERT INTO gate_table VALUES(NULL, ?)';
-            EXECUTE myQuery USING @curDate;
-            DEALLOCATE PREPARE myQuery;
+                PREPARE myQuery FROM 'INSERT INTO gate_table VALUES(NULL, ?)';
+                EXECUTE myQuery USING @curDate;
+                DEALLOCATE PREPARE myQuery;
 
-            SELECT * FROM gate_table;
-            ```
-            + The time is recorded on the table by the INSERT statement when a pass is tagged in real time
+                SELECT * FROM gate_table;
+                ```
+                + The time is recorded on the table by the INSERT statement when a pass is tagged in real time
 
 ***
 Table and View
 ---
-### 5-1. Table
+### 5-1. Creating Table
 * Table: row(record) and column(field)
-    - how to build table
+    - How to build table
         1. table name    
         2. column name
         3. data type for each field
@@ -1157,7 +1154,7 @@ Table and View
               prod_name     CHAR(10) NOT NULL,
               group_name    CHAR(10) NULL,
               price         INT UNSIGNED NOT NULL,
-              amount        SMALLINT UNSIGNED NOT NULL
+              amount        SMALLINT UNSIGNED NOT NULL,
               FOREIGN KEY(mem_id) REFERENCES member(mem_id)
             );
     * Insert Value
@@ -1172,6 +1169,121 @@ Table and View
             INSERT INTO buy VALUES(NULL, 'BLK', 'purse', NULL, 30, 2);
             INSERT INTO buy VALUES(NULL, 'BLK', 'macbookpro', 'digital', 1000, 1);
             ```
+
+### 5-2. Constraint
+
+* **Constraint**: specify rules for the data in a table for data integrity(no defect in data)
+    - Different types of constraint
+        + primary key
+        + foreign key
+        + unique 
+        + check
+        + default
+        + null
+    1. *Primary key* : an identifier that differentiates data
+        + Characteristics
+            * cannot be null
+            * cannot be duplicated
+            * one for each table
+        + Create a primary key constraint
+            ```SQL
+            CREATE TABLE member
+            (   mem_id CHAR(8) NOT NULL PRIMARY KEY
+            );
+            ```
+            * If you want to drop a table with a primary key, you first need to drop the associated table using the primary key as its foreign key<br><br>
+        + Different way of creating a primary key
+            ```SQL
+            CREATE TABLE member
+            (   mem_id CHAR(8) NOT NULL
+            PRIMARY KEY (mem_id)
+            );
+            ```
+        + Add a primary key using ALTER TABLE
+            ```SQL
+            ALTER TABLE member
+                ADD CONSTRAINT
+                PRIMARY KEY (mem_id);
+            ```
+    2. *Foreign key* : associates two different tables by connecting primary key
+        + Characteristics
+            * Referenced column should be a primary key or unique
+                - but the name of the column doesn't need to be the same
+            * A table with primary key: Referenced table or parent table
+            * A table with foreign key: Child table<br><br>
+
+        + How to create a foreign key constraint
+            * Create foreign key
+                ```SQL
+                CREATE TABLE buy
+                (   mem_id  CHAR(8) NOT NULL,
+                    FOREIGN KEY(mem_id) REFERENCES member(mem_id)
+                );
+                ```
+            * Add a foreign key using ALTER TABLE
+                ```SQL
+                ALTER TABLE buy
+                    ADD CONSTRAINT
+                    FOREIGN KEY (mem_id)
+                    REFERENCES member(mem_id);
+                ```
+            * cannot change or delelte the column name of the primary key (**mem_id ='BLK'** into **mem_id = 'PINK'** isn't possible)
+                - How to do this: ON UPDATE CASCADE
+                ```SQL
+                ALTER TABLE buy
+                    ADD CONSTRAINT
+                    FOREIGN KEY(mem_id) REFERENCES member(mem_id)
+                    ON UPDATE CASCADE
+                    ON DELETE CASCADE;
+                ```
+    3. *Unique* : similar to primary key in that it doesn't allow duplicates, but allow NULL
+        + Characteristics
+            * can be multiple in one table
+            * error message if tries to insert same values in different record
+        + Create UNIQUE
+            ```SQL
+            CREATE TABLE member
+            ( email CHAR(30) NULL UNIQUE
+            );
+            ```
+    4. *Check* : checks the input data with conditions
+        + Create CHECK
+            ```SQL
+            CREATE TABLE member
+            (   height TINYINT UNSIGED NULL CHECK (height >= 100)
+            )
+            ```
+        * Change CHECK value
+            ```SQL
+            ALTER TABLE member
+                ADD CONSTRAINT
+                CHECK (phone1 in ('02', '031', '032', '054', '055', '061'))
+            ```
+    5. *Default* : sets value if null
+        + Create Default
+            ```SQL
+            CREATE TABLE member
+            (   height TINYINT UNSIGED NULL DEFAULT 160
+            );
+            ```
+        + Change default value
+            ```SQL
+            ALTER TABLE member
+                ALTER COLUMN phone1 SET DEFAULT '02';
+            ```
+        + Insert value
+            ```SQL
+                INSERT INTO member VALUES('SPC', 'spacegirl', default, default);
+            ```
+    6. *NULL* : allows null
+        + Characteristics
+            * Default is NULL (for column with primary key, default is NOT NULL)
+            * If not allow null, NOT NULL
+            * Different from 0 or ""
+
+### 5-3. View
+                
+
 
 ***
 Index
