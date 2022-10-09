@@ -1282,7 +1282,36 @@ Table and View
             * Different from 0 or ""
 
 ### 5-3. View
-                
+* **View**: a database entity similar to table (virtual table)
+    - Two types of view
+        + Simple View: a view connected to one table
+        + Complex View: a view connected to more than two tables
+    - Concept: View is actually a SELECT statement
+    - How to create view
+        > CREATE VIEW view_name<br>
+            &emsp; AS<br>
+            &emsp; SELECT statement;
+    - Example
+        ```SQL
+        USE market_db;
+        CREATE VIEW v_member
+        AS
+                SELECT mem_id, mem_name, addr FROM member;
+        ```
+        + A view with conditions
+            ```SQL
+            SELECT mem_name, addr FROM v_member
+                WHERE addr IN ('서울', '경기');
+            ```
+    - Characteristics of view
+        + A user executes view -> view executes query -> query brings data from the table -> view shows the result to the user
+        + View is basically a read-only, but view can also change the data within the table if satisfies some conditions
+    - Why use view?
+        + Secure
+            * can only access specific information from the table
+
+
+
 
 
 ***
