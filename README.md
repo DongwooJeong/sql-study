@@ -1284,8 +1284,9 @@ Table and View
 ### 5-3. View
 * **View**: a database entity similar to table (virtual table)
     - Two types of view
-        + Simple View: a view connected to one table
-        + Complex View: a view connected to more than two tables
+        + *Simple* View: a view connected to one table
+        + *Complex* View: a view connected to more than two tables
+            * read only
     - Concept: View is actually a SELECT statement
     - How to create view
         > CREATE VIEW view_name<br>
@@ -1309,6 +1310,46 @@ Table and View
     - Why use view?
         + Secure
             * can only access specific information from the table
+        + Simplify complicated SQL
+            * access view instead of writing a query
+    - How to use view
+        + Create a view -> CREATE VIEW
+            * When accessing view, use "`" if the column name has a space in it 
+            * CREATE OR REPLACE VIEW
+                - used if a view with the same name already exists
+        + Update a view -> UPDATE VIEW
+        + Drop a view -> DROP VIEW
+        + Look up a view info -> DESCRIBE VIEW
+            * cannot check primary key
+        + Check a source code of a view -> SHOW CREATE VIEW
+        + Add data to a view
+            * if a view only refer to specific column names, it cannot add data to other columns
+            * if the column not referred doesn't allow NULL,
+                - need to redefine the view again referring to the columns that requires NOT NULL
+                - Change the property of the column(allow NULL or set default value)
+            * if a view was created with specific condition but data that does not satisfy the condition is added,
+                - data is added but does not appear in the view
+                - use WITH CHECK OPTION so that the data that doesn't satisfy the condition is not added
+                ```SQL
+                ALTER VIEW v_height167
+                AS
+                        SELECT * FROM member WHERE height >= 167
+                            WITH CHECK OPTION ;
+                INSERT INTO v_height167 VALUES('TOB', '텔레토비', '영국', NULL, NULL 140, '1995-01-01') ;
+        + Drop a table referred by a view
+            * can drop the table, so cannot use the view
+            * CHECK TABLE statement can see the status of the view
+            ```SQL
+            CHECK TABLE v_height167;
+            ```
+
+
+
+
+
+    
+         
+
 
 
 
