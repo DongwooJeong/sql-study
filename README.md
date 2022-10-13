@@ -1305,7 +1305,7 @@ Table and View
                 WHERE addr IN ('서울', '경기');
             ```
     - Characteristics of view
-        + A user executes view -> view executes query -> query brings data from the table -> view shows the result to the user
+        + Process: A user executes view -> view executes query -> query brings data from the table -> view shows the result to the user
         + View is basically a read-only, but view can also change the data within the table if satisfies some conditions
     - Why use view?
         + Secure
@@ -1342,22 +1342,32 @@ Table and View
             ```SQL
             CHECK TABLE v_height167;
             ```
-
-
-
-
-
-    
-         
-
-
-
-
-
-
 ***
 Index
 ---
+6-1. Understanding the Concept of Index
+* **Index**: a tool that helps find data faster
+    - Two types of Index
+        + *Clustered Index*: automatically generated when set as a primary key; one for each table; automatically aligned based on the column specified as a primary key
+            * like a dictionary, data are aligned from the beginning
+            * when setting a primary key, clustered index is automatically generated
+            * by setting a primary key, records are aligned based on the field with the primary key e.g. alphabetically
+        + *Secondary Index*: automatically generated when set as a unique key; can be more than one; not automatically aligned
+            * when setting a unique key, secondary index is automatically generated
+            * a unique key doesn't realign the preexisting data as clustered index
+    - Concept of Index
+        + Like the index at the end of a book, an index allows you to quickly search without having to search through the entire book
+        + More efficient when it comes to large tables
+        + However, creating too many useless index increases the space occupied by the database and make searching for data using the index slower.
+            * MySQL decides by itself whether to use index depending on the time it spends to look up the data
+        + *Pros*: faster SELECT statement query -> reduce the burden on the computer and improve system performance
+        + *Cons*: occupies more space / need to spend some time creating your first index / INSERT, UPDATE, DELETE might worsen the performance
+    - How to check index
+        ```SQL
+        SHOW INDEX FROM table1;
+        ```
+
+
 ***
 Stored Procedure
 ---
