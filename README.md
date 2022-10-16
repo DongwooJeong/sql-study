@@ -1345,7 +1345,7 @@ Table and View
 ***
 Index
 ---
-6-1. Understanding the Concept of Index
+### 6-1. Understanding the Concept of Index
 * **Index**: a tool that helps find data faster
     - Two types of Index
         + *Clustered Index*: automatically generated when set as a primary key; one for each table; automatically aligned based on the column specified as a primary key
@@ -1366,6 +1366,32 @@ Index
         ```SQL
         SHOW INDEX FROM table1;
         ```
+### 6-2. Internal Operation of the Index
+* Both clustered index and secondary index are made of *Balanced tree (B-Tree)*, one of universally used data structures.
+    - B-tree are made of root, internal, and leaf nodes
+* Internal Operation of the Index
+    - Concept of a B-tree
+        + Node: where the data are stored
+            * root(highest) - internal - leaf(lowest)
+            * called *page* in MySQL
+        + Page: minimum unit of storage
+            * can store 16Kbyte
+        + B-tree is efficient in SELECT statement that it reads data in the root page, which will directly lead to the leaf page that contains the data we want (not a Full Table Scan)
+        + On the other hand, in INSERT, UPDATE, and DELETE statements *page split* occurs, so the index cause more time for data modification
+            * Page split: data modification causes changes in the number of pages because of the capacity of page or even create new internal pages
+* Structure of the Index
+    - Clustered Index
+        + Add Constraint Primary key
+            * aligns data based on the primary key
+            * creates root and leaf pages 
+    - Secondary Index
+        + Add Constraint Unique
+            * doesn't align data (no effect on data page)
+            * aligns data in the leaf page of the index
+            * each data is assigned the location, in a format of *page number + #location*, since data page is not aligned
+    - Index Scan
+        + SELECT statement
+        + Clustered Index is a little faster than Secondary Index
 
 
 ***
