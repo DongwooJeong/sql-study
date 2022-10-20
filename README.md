@@ -1393,6 +1393,97 @@ Index
         + SELECT statement
         + Clustered Index is a little faster than Secondary Index
 
+### 6-3. Actual Use of the Index
+* Syntax for creating and dropping index
+    - **3 ways to create index**
+        + primary key (clustered index)
+        + unique (secondary index)
+        + CREATE INDEX statement
+<br><br>
+* CREATE INDEX
+    > CREATE [UNIQUE] INDEX index_name<br>
+    &emsp; ON table_name (column_name) [ASC | DESC]
+    - UNIQUE: do not allow duplicate
+    - ASC | DESC: default is ASC
+    - Example
+        ```SQL
+        CREATE INDEX idx_member_addr
+            ON member (addr);
+        ```
+        + This creates a *simple secondary index*, which allows duplicate, while *unique secondary index* doesn't
+        + You cannot create a unique index if the records already have duplicates
+        + After creating a unique index, you cannot enter any record that violates the unique constraint. 
+    
+
+* DROP INDEX
+    > DROP INDEX index_name ON table_name
+    - only drop index that is created by CREATE INDEX statement
+    - Example
+        ```SQL
+        DROP INDEX idx_member_mem_name ON member;
+        DROP INDEX idx_member_addr ON member;
+        ```
+        + To drop clustured index
+            ```SQL
+            ALTER TABLE member
+                DROP PRIMARY KEY;
+            ```
+            * Before executing this code, look for any constraint like foreign keys
+                ```SQL
+                SELECT table_name, constraint_name
+                FROM information_schema.referential_constraints
+                WHERE constraint_schema = 'market_db';
+                ```
+            - Drop foreign key constraint
+                ```SQL
+                ALTER TABLE buy
+                DROP FOREIGN KEY buy_ibfk_1;
+                ALTER TABLE member
+                DROP PRIMARY KEY;
+                ```
+* How to check index status
+    ```SQL
+    USE market_db;
+    SHOW INDEX FROM member; -- one clustered index (mem_id)
+    SHOW TABLE STATUS LIKE 'member'; -- Data_length indicates the size of the clustered index (the size of one page in MySQL is 16KB)
+    -- Index_length indicates the size of the secondary index
+    ```
+    
+    - After creating a secondary index, to apply the change to the table status, use ANALYZE TABLE statement to reflect the change
+    
+        ```SQL
+        ANALYZE TABLE member;
+        SHOW TABLE STATUS LIKE 'member';
+        ```
+* Practice using index
+    - MySQL choose the way of scanning, depending on which way is more efficient
+        + When selecting every record, *FULL TABLE SCAN*
+        + When selecting every record for only a few columns where indexes are created, *FULL TABLE SCAN*
+        + Same as the previous case, but using WHERE statement to identify specific records, *INDEX SCAN*
+            * *Single Row (constant)*: WHERE statement indicates specific record
+            * *Index Range Scan*: WHERE has a range
+        + Same as the previous case using WHERE statement, but when there's a lot to look for, *FULL TABLE SCAN*
+        + Calculation within the WHERE statement, *FULL TABLE SCAN*
+
+* Final notes on Index
+    - Index is created in columns
+        + One index for one column (most of the time)
+    - Create index in columns where WHERE statement is used
+    - Create index when used frequently
+    - Do not create index where the column has many duplicates
+    - Clustered Index is created one for each table
+    - Drop any index that is not in use
+
+
+
+
+
+
+
+
+
+
+
 
 ***
 Stored Procedure
