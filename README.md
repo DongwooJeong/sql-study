@@ -1473,21 +1473,155 @@ Index
     - Do not create index where the column has many duplicates
     - Clustered Index is created one for each table
     - Drop any index that is not in use
-
-
-
-
-
-
-
-
-
-
-
-
 ***
 Stored Procedure
 ---
+### 7-1. How to Use Stored Procedure
+* Stored Procedure: adds programming features to SQL 
+    - Concept and format of stored procedure
+        + Stored Procedure: a set of query, used to collectively process certain actions
+        + Format
+            > DELIMITER \$$
+            <br> 
+            CREATE PROCEDURE stored_procedure_name(in or out parameter) <br>
+            BEGIN<br>
+            -- code goes here<br>
+            END $$<br>
+            DELIMITER ;
+    
+            * \$$ used as a delimiter instead of ";", to distinguish from the delimiter used inside the procedure
+            * Execute procedure
+              > CALL stored_procedure_name();
+            * Drop procedure
+              > DROP PROCEDURE stored_procedure_name;
+                - no parenthesis when dropping the procedure
+    - Example
+        ```SQL
+        USE market_db;
+        DROP PROCEDURE IF EXISTS user_proc;
+        DELIMITER $$
+        CREATE PROCEDURE user_proc()
+        BEGIN
+            SEKECT * FROM member;
+        END $$
+        DELIMITER ;
+
+        CALL user_proc();
+        ```
+        + Using IF ELSE
+            ```SQL
+            DROP PROCEDURE IF EXISTS ifelse_proc;
+            DELIMITER $$
+            CREATE PROCEDURE ifelse_proc(
+                IN memName VARCHAR(10)
+            )
+            BEGIN
+                DECLARE debutYear INT;
+                SELECT YEAR(debut_date) into debutYear FROM member
+                    where mem_name = memName;
+                IF debutYear>=2015 THEN
+                    SELECT "rookie" AS 'message';
+                ELSE
+                    SELECT "senior" AS 'message';
+                END IF;
+            END $$
+            DELIMITER ;
+
+            CALL ifelse_proc('오마이걸');
+            ```
+        + Using WHILE
+            ```SQL
+            DROP PROCEDURE IF EXISTS while_proc;
+            DELIMITER $$
+            CREATE PROCEDURE while_proc()
+            BEGIN
+                DECLARE hap INT;
+                DECLARE num INT;
+                SET hap = 0;
+                SET num = 1;
+                WHILE (num<=100)	DO 
+                    SET hap = hap + num;
+                SET num= num + 1;
+                END WHILE;
+                SELECT hap AS 'Sum of 1 to 100';
+            END $$
+            DELIMITER ;
+                        
+            CALL while_proc();
+            ```
+        + Using dynamic SQL
+            ```SQL
+            DROP PROCEDURE IF EXISTS dynamic_proc;
+            DELIMITER $$
+            CREATE PROCEDURE dynamic_proc(
+                IN tableName VARCHAR(20)
+            )
+            BEGIN
+                SET @sqlQuery = CONCAT('SELECT * FROM', tableName);
+                PREPARE myQuery FROM @sqlQuery;
+                EXECUTE myQuery;
+                DEALLOCATE PREPARE myQuery;
+            END $$
+            DELIMITER ;
+
+            CALL dynamic_proc('member');
+            ```
+    - How to use parameter
+        + Input parameter
+            > IN input_parameter_name data_type
+            + how to execute stored procedure with input parameter
+               > CALL procedure_name(value);
+            + Example
+                ```SQL
+                USE market_db;
+                DROP PROCEDURE IF EXISTS user_proc1;
+                DELIMITER $$
+                CREATE PROCEDURE user_proc1(IN userName VARCHAR(10))
+                BEGIN
+                    SEELCT * FROM member WHERE mem_name = userName;
+                END $$
+                DELIMITER ;
+
+                CALL user_proc1('에이핑크');
+                ```
+        + Output parameter
+            > OUT output_parameter_name data_type
+            * how to execute stored procedure with output parameter
+                > CALL procedure_name(@variablename);<br>
+                SELECT @variablename;
+            + Example
+                ```SQL
+                USE market_db;
+                DROP PROCEDURE IF EXISTS user_proc3;
+                DELIMITER $$
+                CREATE PROCEDURE user_proc3(
+                    IN txtValue CHAR(10),
+                    OUT outValue INT    )
+                BEGIN
+                    INSERT INTO noTable VALUES(NULL,txtValue);
+                    SELECT MAX(id) INTO outValue FROM noTable;
+                END $$
+                DELIMITER ;
+
+                -- create noTable
+                CREATE TABLE IF NOT EXISTS noTable(
+                    id INT AUTO_INCREMENT PRIMARY KEY,
+                    txt CHAR(10)
+                );
+
+                -- call procedure
+                CALL user_proc3 ('test1', @myValue);
+                SELECT CONCAT('Entered ID value ==>', @myValue);
+
+                ```
+
+
+
+
+
+
+
+
 ***
 SQL and Python
 ---
