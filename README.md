@@ -1481,9 +1481,8 @@ Stored Procedure
     - Concept and format of stored procedure
         + Stored Procedure: a set of query, used to collectively process certain actions
         + Format
-            > DELIMITER \$$
-            <br> 
-            CREATE PROCEDURE stored_procedure_name(in or out parameter) <br>
+            > DELIMITER \$$            
+            CREATE PROCEDURE stored_procedure_name (in or out parameter) <br>
             BEGIN<br>
             -- code goes here<br>
             END $$<br>
@@ -1502,7 +1501,7 @@ Stored Procedure
         DELIMITER $$
         CREATE PROCEDURE user_proc()
         BEGIN
-            SEKECT * FROM member;
+            SELECT * FROM member;
         END $$
         DELIMITER ;
 
@@ -1578,7 +1577,7 @@ Stored Procedure
                 DELIMITER $$
                 CREATE PROCEDURE user_proc1(IN userName VARCHAR(10))
                 BEGIN
-                    SEELCT * FROM member WHERE mem_name = userName;
+                    SELECT * FROM member WHERE mem_name = userName;
                 END $$
                 DELIMITER ;
 
@@ -1614,7 +1613,21 @@ Stored Procedure
                 SELECT CONCAT('Entered ID value ==>', @myValue);
 
                 ```
-
+### 7-2. Stored Function and Cursor
+* Stored Function: provide the ability to create functions directly, in addition to built-in functions provided by MySQL
+    - use RETURNS to return a single value
+    - Concept:
+    - format:
+        > DELIMITER \$$ <br>
+        CREATE FUNCTION stored_function_name(parameter) <br>
+        &emsp;&emsp;RETURNS return_format<br>
+        BEGIN<br>
+        &emsp;&emsp;[CODE]<br>
+        &emsp;&emsp;RETURNS return_value;<br>
+        END $$<br>
+        DELIMITER ;<br>
+        SELECT stored_function_name();
+* Cursor: a programming method used to process each row in a stored procedure
 
 
 
