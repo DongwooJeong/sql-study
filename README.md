@@ -1615,9 +1615,9 @@ Stored Procedure
                 ```
 ### 7-2. Stored Function and Cursor
 * Stored Function: provide the ability to create functions directly, in addition to built-in functions provided by MySQL
-    - use RETURNS to return a single value
-    - Concept:
-    - format:
+    - RETURNS: return a single value
+    - Concept: User-created function in MySQL
+    - Format:
         > DELIMITER \$$ <br>
         CREATE FUNCTION stored_function_name(parameter) <br>
         &emsp;&emsp;RETURNS return_format<br>
@@ -1627,7 +1627,134 @@ Stored Procedure
         END $$<br>
         DELIMITER ;<br>
         SELECT stored_function_name();
-* Cursor: a programming method used to process each row in a stored procedure
+    - Difference from Stored Procedure
+        + RETURNS and RETURN to return a value
+        + only has input parameter, so no need to have IN within the parenthesis
+        + SELECT to call the function, not CALL
+        + cannot have SELECT statement within the function
+        + used to return single value through some specific calculations
+    - How to use Stored Function
+        ```SQL
+        SET GLOBAL log_bin_trust_function_creators = 1;
+        ```
+        + authorize to create the function
+        + need to set up only once
+    - Example
+        + sum of two input integer
+        ```SQL
+        USE market_db;
+        DROP FUNCTION IF EXISTS sumFunc;
+        DELIMITER $$
+        CREATE FUNCTION sumFunc(number1 INT, number2 INT)
+            RETURNS INT
+        BEGIN  
+            RETURN number1 + number2;
+        END $$
+        DELIMITER ;
+
+        SELECT sumFunc(100, 200) AS 'sum';
+        ```
+        + calculates active period in year
+        ```SQL
+        DROP FUNCTION IF EXISTS calcYearFunc;
+        DELIMITER $$
+        CREATE FUNCTION calcYearFunc(dYear INT)
+            RETURNS INT
+        BEGIN
+            Declare runYear INT; -- period of activity
+            SET runYear = YEAR(CURDATE()) - dYear;
+            RETURN runYear;
+        END $$
+        DELIMITER ;
+
+        SELECT calcYearFunc(2010) AS 'active year';
+        ```
+        + use SELECT ~ INTO ~ to store values and use
+            ```SQL
+            SELECT calcYearFunc(2007) INTO @debut2007;
+            SELECT calcYearFunc(2010) INTO @debut2013;
+            SELECT debut2007-debut2013 AS 'difference between 2007 and 2013';
+            ```
+        + YEAR() function
+            ```SQL
+            SELECT mem_id, mem_name, calcYearFunc(YEAR(debut_date)) AS 'active year' FROM member;
+            ```
+    - how to check the content of previously made function
+        ```SQL
+        SHOW CREATE FUNCTION function_name;
+        ```
+    - how to drop function
+        ```SQL
+        DROP FUNCTION calcYearFunc;
+        ```
+
+* Cursor: a programming method used to process one row at a time in a stored procedure
+    - How a cursor processes the data
+        1. declare a cursor
+            * prepare variables
+                ```SQL
+                DECLARE memNumber INT;
+                DECLARE cnt INT DEFAULT 0;
+                DECLARE totNumber INT DEFAULT 0;
+                ```
+                - variable for end of the row
+                    ```SQL
+                    DECLARE endOfRow BOOLEAN DEFALUT FALSE
+                    ```
+            * declare a cursor
+                ```SQL
+                DECLARE memberCursor CURSOR FOR
+                    SELECT mem_number FROM member;
+                ```
+        2. declare a loop condition
+            * DECLARE CONTINUE HANDLER: a reserved word to prepare a loop condition
+            * FOR NOT FOUND: executes the following statement if there's no remaining row.
+            ```SQL
+            DECLARE CONTINUE HANDLER
+                FOR NOT FOUND SET endOfRow = TRUE;
+            ```
+        1. open the cursor
+            ```SQL
+            OPEN memberCursor;
+            ```
+        1. bring the data
+            * FETCH
+        1. process the data
+            * format
+                > cursor_loop: LOOP <br>
+                &emsp;# repeated code <br>
+                END LOOP cursor_loop <br>
+            * change endOfRow to TRUE to avoid infinite loop
+                ```SQL
+                IF endOfRow THEN
+                    LEAVE cursor_loop;
+                END IF;
+                ```
+            * code
+                ```SQL
+                cursor_loop: LOOP 
+                    FETCH memberCursor INTO memNumber;
+
+                    IF endOfRow THEN
+                        LEAVE cursor_loop;
+                    END IF;
+
+                    SET cnt = cnt + 1;
+                    SET totNumber = totNumber +memNumber;
+                END LOOP cursor_loop;
+                ```
+            * calculate the average
+                ```SQL
+                SELECT (totNumber/cnt) AS "member's average number of people";
+                ```
+        1. close the cursor
+            ```SQL
+            CLOSE memberCursor;
+            ```
+    * Call the stored procedure with a cursor
+        ```SQL
+        CALL cursor_proc();
+        ```
 
 
 
