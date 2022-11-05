@@ -1756,7 +1756,47 @@ Stored Procedure
         CALL cursor_proc();
         ```
 
-
+### 7-3. Trigger
+* **Trigger**: a special type of stored procedure that automatically runs when an event occurs in the database server
+    - runs when executing the *event* of *DML*(Data Manipulation Language - INSERT, UPDATE, DELETE)
+        + ex) When an employee leaves the company and deletes its records from the database, it automatically updates the employee's resignation information table in case you want to know the resignation information
+    - a program code that is attached to a table
+    - AFTER trigger vs. BEFORE trigger
+    - similar to a stored procedure
+        + but not use CALL because automatically executed
+        + No IN or OUT Parameter
+    - Example
+        + show a pre-written message when delete the record from the table
+            ```SQL
+            DROP TRIGGER IF EXISTS myTrigger;
+            DELIMITER $$
+            CREATE TRIGGER myTrigger
+                AFTER DELETE --execute the trigger after the DELETE statement
+                ON trigger_table
+                FOR EACH ROW -- always use this line for trigger
+            BEGIN
+                SET @msg = 'Deleted'; -- the actual part to be executed as a trigger
+            END $$
+            DELIMITER ;
+            ```
+        + create a backup table that keeps a record of who changed the record and when it happened whenever someone updates the table
+            ```SQL
+            DROP TRIGGER IF EXISTS singer_updateTrg;
+            DELIMITER $$
+            CREATE TRIGGER singer_updateTrg
+                AFTER UPDATE
+                ON singer
+                FOR EACH ROW
+            BEGIN
+                INSERT INTO backup_singer VALUES (OLD.mem_id, OLD.mem_name, OLD.mem_number, OLD.addr, 'mod' CURDATE(), CURRENT_USER() );
+            END $$
+            DELIMITER ;
+            ```
+            * when deleting a record, the system delete the record from the original table, and the table before the data is deleted is briefly retained under the name *OLD Table*
+            * Similarly, INSERT adds the record to the *NEW table* while retaining the original table for a while
+            * Hence, UPDATE uses both NEW and OLD table
+    - When using TRUNCATE statement, DELETE trigger doesn't work
+    
 
 
 
