@@ -1797,12 +1797,30 @@ Stored Procedure
             * Hence, UPDATE uses both NEW and OLD table
     - When using TRUNCATE statement, DELETE trigger doesn't work
     
-
-
-
-
-
 ***
 SQL and Python
 ---
+### Python Development Environment
+* Python: 1991, Guiddo van Rossum
+    - more intuitive than other languages and useful in many areas (Big data, AI, Web development, Science, Education, etc)
+    - key strengths
+        + free
+        + easy to install
+        + useful libraries
+* How to install pymysql
+    - Install python library called PyMySQL to connect Python and MySQL
+    ```
+    pip install pymysql
+    ```
+* Basic python
+    - IDLE: Python's Integrated Development and Learning Environment
+    - python is a interpret(script) language
+        + compile language vs script language
+            * compile language: a language that executes the translated file (.exe, .class) after the source code is translated into executable machine language
+                - C, C++, JAVA
+            * script language(interpreter): a language that executes right away by reading the source code one line at a time
+                - Python, JavaScript, Perl
+                
+
+
 ***
