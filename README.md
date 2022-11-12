@@ -1800,7 +1800,7 @@ Stored Procedure
 ***
 SQL and Python
 ---
-### Python Development Environment
+### 8-1. Python Development Environment
 * Python: 1991, Guiddo van Rossum
     - more intuitive than other languages and useful in many areas (Big data, AI, Web development, Science, Education, etc)
     - key strengths
@@ -1821,6 +1821,85 @@ SQL and Python
             * script language(interpreter): a language that executes right away by reading the source code one line at a time
                 - Python, JavaScript, Perl
                 
+### 8-2. Connecting Python with MySQL
+* **pymysql** library enables database interoperation program
+    - Advantage: Users don't need to learn SQL to use databse
+* How to enter data in Python IDLE
+    0. Create database in MySQL
+        ```SQL
+        DROP DATABASE IF EXISTS soloDB;
+        CREATE DATABASE soloDB;
+        ```
+    1. Connect to MySQL in IDLE
+        >import pymysql <br>
+        conn = pymysql.connect(host='server ip address', user='user', password='password', db='database name', charset='character set') 
+        + conn is a variable used as a connection
+        + charset = 'utf8': To use Korean
+    2. Create a cursor
+        + A cursor is used as a path to retrieve the output of SQL statement from the database
+        ```python
+        cur = conn.cursor()
+        ```
+    3. Create a table
+        + use a CREATE TABLE statement as a parameter in the cursorname.execute() function
+        ```python
+        cur.execute("CREATE TABLE userTable (id char(4), userName char(15), email char(20), birthYear int)")
+        ```
+        + The result of this code is 0 or other numbers
+    4. Enter a record into the table
+        ```python
+        cur.execute("INSERT INTO userTable VALUES('hong','jiyoon', 'hong@naver.com', 1996)")
+        cur.execute("INSERT INTO userTable VALUES('kim','taeyeon', 'kim@daum.net', 2011)")
+        cur.execute("INSERT INTO userTable VALUES('star','sarang', 'star@paran.com', 1990)")
+        cur.execute("INSERT INTO userTable VALUES('yang','jieun', 'yang@gmail.com', 1993)")
+        ```
+        + The result of each line of code is 1, meaning 1 record is entered
+    5. Save data in the table
+        + commit: save the data
+        ```python
+        conn.commit()
+        ```
+    6. Close MySQL connection
+        ```python
+        conn.close()
+        ```
+* How to lookup the data in Python IDLE
+    1. Connect to MySQL
+    2. Create a cursor
+    3. Lookup the data in the table
+        > cursorname.execute("SELECT ~")
+    4. Print the lookup data
+        + iterate this part
+        > cursorname.fetchone()
+        > cursorname.fetchall() 
+        + fetchone() access each row; fetchall() access all rows at once
+    5. Close MySQL connection
+    - Code Example
+        ```python
+        import pymysql
 
+        con, cur = None, None
+        data1, data2, data3, data4 = "", "", "", ""
+        row=None
 
+        conn = pymysql.connect(host='127.0.0.1', user='root', password='0000', db='soloDB', charset='utf8')
+        cur = conn.cursor()
+
+        cur.execute("SELECT * FROM userTable")
+
+        print("userID    username    email      yearofbirth")
+        print("----------------------------------------------------")
+
+        while (True) :
+            row = cur.fetchone()
+            if row== None :
+                break
+            data1 = row[0]
+            data2 = row[1]
+            data3 = row[2]
+            data4 = row[3]
+            print("%5s   %15s   %20s   %d" % (data1, data2, data3, data4))
+
+        conn.close()
+        ```
 ***
