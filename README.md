@@ -1823,9 +1823,10 @@ SQL and Python
                 
 ### 8-2. Connecting Python with MySQL
 * **pymysql** library enables database interoperation program
-    - Advantage: Users don't need to learn SQL to use databse
+    - *Advantage*: Users don't need to learn SQL to use databse
 * How to enter data in Python IDLE
-    0. Create database in MySQL
+
+    0. Create database in MySQL<br>
         ```SQL
         DROP DATABASE IF EXISTS soloDB;
         CREATE DATABASE soloDB;
@@ -1903,3 +1904,117 @@ SQL and Python
         conn.close()
         ```
 ***
+### GUI Application Program
+* GUI(Graphic User Interface): a graphical environment in Windows
+    - tkinter: a python library that enables to write a GUI application program
+* GUI basic programming
+    - basic components
+        ```python
+        from tkinter import *
+        root = Tk()
+        root.mainloop()
+        ```
+        + Tk(): returns a basic window, called root window
+        + root.mainloop(): necesssary for all events such as pressing a button on keyboard or click
+        ```python
+        from tkinter import *
+        root = Tk()
+        root.title("Study alone GUI")
+        root.geometry("400X200")
+
+        root.mainloop()
+        ```
+    - A label is a widget(componets on the Window screen, use pack() function) that can print letters 
+        ```python        
+        from tkinter import *
+        root = Tk()
+        root.title("Study alone GUI")
+        root.geometry("300x100")
+
+        label1 = Label(root, text="studying alone SQL is")
+        label2 = Label(root, text="easy", font=("sans-serif",30), bg="blue", fg="yellow")
+
+        label1.pack()
+        label2.pack()
+
+        root.mainloop()
+        ```
+    - A button is a widget that execute a specific task when clicked
+        ```python
+        from tkinter import *
+        from tkinter import messagebox
+
+        def clickButton():
+            messagebox.showinfo('click button', "clicked the button...")
+
+        root = Tk()
+        root.geometry("200x200")
+
+        button1 = Button(root, text="click here", fg="red", bg="yellow", command=clickButton)
+        button1.pack(expand=1)
+
+        root.mainloop()
+        ```
+        + command calls a function
+        + expand=1 to center the button
+    
+    - Aligning the widget
+        ```python
+        from tkinter import *
+
+        root = Tk()
+
+        button1 = Button(root, text="study alone 1")
+        button2 = Button(root, text="study alone 2")
+        button3 = Button(root, text="study alone 3")
+
+        button1.pack(side=LEFT)
+        button2.pack(side=LEFT)
+        button3.pack(side=LEFT)
+
+        root.mainloop()
+        ```
+
+        ```python
+        from tkinter import *
+
+        root = Tk()
+
+        button1 = Button(root, text="study alone 1")
+        button2 = Button(root, text="study alone 2")
+        button3 = Button(root, text="study alone 3")
+
+        button1.pack(side=TOP, fill=X, padx=10, pady=10)
+        button2.pack(side=TOP, fill=X, padx=10, pady=10)
+        button3.pack(side=TOP, fill=X, padx=10, pady=10)
+
+        root.mainloop()
+        ```
+
+    - Frame, Entry, Listbox
+        ```python
+        from tkinter import *
+        root = Tk()
+        root.geometry("200x250")
+
+        upFrame = Frame(root)
+        upFrame.pack()
+        downFrame = Frame(root)
+        downFrame.pack()
+
+        editBox = Entry(upFrame, width = 10, )
+        editBox.pack(padx = 20, pady = 20)
+
+        listbox = Listbox(downFrame, bg = 'yellow')
+        listbox.pack()
+
+        listbox.insert(END, "하나")
+        listbox.insert(END, "둘")
+        listbox.insert(END, "셋")
+
+        root.mainloop()
+        ```
+        + create two frames(entry and listbox)
+        
+
+
